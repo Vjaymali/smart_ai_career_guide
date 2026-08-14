@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Psychometric Assessment | Smart AI Career Guide</title>
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/psychometric.css') }}">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+
+<body class="test-body">
+
+<div class="test-wrapper">
+
+    <!-- Badge -->
+
+    <div class="test-badge">
+
+        <i class="fas fa-brain"></i>
+
+        AI Powered Career Assessment
+
+    </div>
+
+    <!-- Heading -->
+
+    <h2>
+
+        Discover Your Career Personality 🚀
+
+    </h2>
+
+    <p class="test-description">
+
+        Answer all 25 questions honestly.
+
+        Our AI will analyze your personality traits and help recommend
+        the most suitable career paths.
+
+    </p>
+
+    <!-- Top Info -->
+
+    <div class="test-top-bar">
+
+        <div class="test-info">
+
+            <div class="info-card">
+
+                <i class="fas fa-clock"></i>
+
+                5 Minutes
+
+            </div>
+
+            <div class="info-card">
+
+                <i class="fas fa-list-check"></i>
+
+                25 Questions
+
+            </div>
+
+            <div class="info-card">
+
+                <i class="fas fa-robot"></i>
+
+                AI Analysis
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Question Number -->
+
+    <div id="q-number">
+
+        <span id="questionCounter">
+
+            Question 1 of 25
+
+        </span>
+
+        <span id="progressText">
+
+            0%
+
+        </span>
+
+    </div>
+
+    <!-- Progress -->
+
+    <div class="progress-bar">
+
+        <div id="progress"></div>
+
+    </div>
+
+    <!-- Question -->
+
+    <div class="question-card">
+
+        <p id="question-box">
+
+            Loading Question...
+
+        </p>
+
+    </div>
+
+    <!-- Options -->
+
+    <div class="options">
+
+        <button type="button" onclick="selectAnswer(1)">
+
+            <span>😕</span>
+
+            Strongly Disagree
+
+        </button>
+
+        <button type="button" onclick="selectAnswer(2)">
+
+            <span>🙁</span>
+
+            Disagree
+
+        </button>
+
+        <button type="button" onclick="selectAnswer(3)">
+
+            <span>😐</span>
+
+            Neutral
+
+        </button>
+
+        <button type="button" onclick="selectAnswer(4)">
+
+            <span>🙂</span>
+
+            Agree
+
+        </button>
+
+        <button type="button" onclick="selectAnswer(5)">
+
+            <span>😍</span>
+
+            Strongly Agree
+
+        </button>
+
+    </div>
+
+    <!-- Navigation -->
+
+    <div class="nav-buttons">
+
+        <button type="button"
+
+            onclick="prevQuestion()">
+
+            <i class="fas fa-arrow-left"></i>
+
+            Previous
+
+        </button>
+
+        <button
+
+            type="button"
+
+            id="nextBtn"
+
+            onclick="nextQuestion()">
+
+            Next
+
+            <i class="fas fa-arrow-right"></i>
+
+        </button>
+
+    </div>
+
+</div>
+
+<!-- Loading Screen -->
+
+<div class="loading-screen"
+
+id="loadingScreen">
+
+    <div class="loader"></div>
+
+    <h2>
+
+        Analyzing Your Personality...
+
+    </h2>
+
+    <p>
+
+        Please wait while our AI processes your responses.
+
+    </p>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/psychometric.js') }}"></script>
+
+</body>
+
+</html>

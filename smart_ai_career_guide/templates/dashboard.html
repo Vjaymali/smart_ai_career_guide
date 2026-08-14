@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Smart AI Career Guide</title>
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+<a href="/" class="logo">
+<img src="{{ url_for('static', filename='images/logo.png.jpeg') }}" alt="Smart AI Career Guide logo featuring artificial intelligence and career guidance theme">
+<h2>Smart AI Career Guide</h2>
+</a>
+
+<div class="nav-links">
+
+<a href="/">Home</a>
+
+<a href="/dashboard">Dashboard</a>
+
+<a href="/chatbot">AI Chatbot</a>
+
+<a href="/career-support">Career Support</a>
+
+<a href="/logout" class="logout-btn">Logout</a>
+
+</div>
+
+</nav>
+
+<!-- ================= HERO ================= -->
+
+<section class="dashboard-hero">
+
+<div class="dashboard-left">
+
+<div class="welcome-text">
+
+<i class="fa-solid fa-sparkles"></i>
+
+<h4 class="welcome-text">
+    Welcome Back, {{ session['name'] }}
+</h4>
+
+</div>
+
+<h1>
+Shape Your Future
+Career with
+<span>Artificial Intelligence</span>
+
+</h1>
+
+<p>
+
+Your personalized career journey begins here.
+Complete your assessments to unlock AI-powered
+career recommendations specially tailored
+for your interests, personality and skills.
+
+</p>
+
+<div class="hero-buttons">
+
+<a href="/psychometric-test"
+class="hero-primary-btn">
+
+Start Assessment
+
+</a>
+
+<a href="#dashboardCards"
+class="hero-secondary-btn">
+
+Explore Dashboard
+
+</a>
+
+</div>
+
+<div class="hero-stats">
+
+<div>
+
+<h2>30+</h2>
+
+<span>Career Domains</span>
+
+</div>
+
+<div>
+
+<h2>AI</h2>
+
+<span>Powered</span>
+
+</div>
+
+<div>
+
+<h2>24/7</h2>
+
+<span>Support</span>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="dashboard-right">
+
+<img src="{{ url_for('static', filename='images/career-hero.png') }}"
+class="dashboard-hero-image"
+alt="Illustration of a person confidently standing with career-related symbols including a graduation cap, briefcase, and upward trending arrow representing professional growth and achievement">
+
+</div>
+
+</section>
+
+<!-- ================= PROGRESS ================= -->
+
+<section class="progress-section">
+
+<h2>
+
+Your Career Journey
+
+</h2>
+
+<p>
+
+Track your progress and unlock your final
+AI Career Prediction.
+
+</p>
+
+<div class="progress-card">
+
+<div class="progress-bar">
+
+<div class="progress-fill" data-progress="20"></div>
+
+</div>
+
+<div class="progress-grid">
+
+<div class="progress-item completed">
+
+<i class="fa-solid fa-circle-check"></i>
+
+Registration
+
+</div>
+
+<div class="progress-item pending">
+
+<i class="fa-solid fa-clock"></i>
+
+Psychometric Test
+
+</div>
+
+<div class="progress-item pending">
+
+<i class="fa-solid fa-clock"></i>
+
+Career Test
+
+</div>
+
+<div class="progress-item locked">
+
+<i class="fa-solid fa-lock"></i>
+
+AI Prediction
+
+</div>
+
+<div class="progress-item locked">
+
+<i class="fa-solid fa-lock"></i>
+
+Final Report
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= QUICK STATS ================= -->
+
+<section class="dashboard-stats">
+
+<div class="dashboard-stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-brain"></i>
+</div>
+
+<h2>25</h2>
+
+<p>Psychometric Questions</p>
+
+</div>
+
+<div class="dashboard-stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-book-open"></i>
+</div>
+
+<h2>30+</h2>
+
+<p>Career Domains</p>
+
+</div>
+
+<div class="dashboard-stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-chart-line"></i>
+</div>
+
+<h2>95%</h2>
+
+<p>Prediction Accuracy</p>
+
+</div>
+
+<div class="dashboard-stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-headset"></i>
+</div>
+
+<h2>24/7</h2>
+
+<p>AI Assistance</p>
+
+</div>
+
+</section>
+
+<!-- ================= MAIN FEATURES ================= -->
+
+<section id="dashboardCards" class="dashboard-features">
+
+<div class="feature-card">
+
+<div class="feature-top">
+
+<div class="feature-icon">
+
+<i class="fa-solid fa-brain"></i>
+
+</div>
+
+<h3>Psychometric Assessment</h3>
+
+</div>
+
+<p>
+
+Analyze your personality through scientifically
+designed questions and discover your strengths.
+
+</p>
+
+<ul>
+
+<li><i class="fa-solid fa-check"></i> Personality Analysis</li>
+
+<li><i class="fa-solid fa-check"></i> Interest Mapping</li>
+
+<li><i class="fa-solid fa-check"></i> Skill Identification</li>
+
+</ul>
+
+<a href="/psychometric-test" class="feature-btn">
+
+Start Assessment
+
+</a>
+
+</div>
+
+<div class="feature-card">
+
+<div class="feature-top">
+
+<div class="feature-icon">
+
+<i class="fa-solid fa-graduation-cap"></i>
+
+</div>
+
+<h3>Career Assessment</h3>
+
+</div>
+
+<p>
+
+Evaluate academic strengths, interests,
+skills and future career preferences.
+
+</p>
+
+<ul>
+
+<li><i class="fa-solid fa-check"></i> Academic Analysis</li>
+
+<li><i class="fa-solid fa-check"></i> Career Interests</li>
+
+<li><i class="fa-solid fa-check"></i> Future Goals</li>
+
+</ul>
+
+<a href="/career-test" class="feature-btn">
+
+Start Career Test
+
+</a>
+
+</div>
+
+<div class="feature-card">
+
+<div class="feature-top">
+
+<div class="feature-icon">
+
+<i class="fa-solid fa-robot"></i>
+
+</div>
+
+<h3>AI Career Chatbot</h3>
+
+</div>
+
+<p>
+
+Ask unlimited career questions and receive
+instant AI-powered career guidance.
+
+</p>
+
+<ul>
+
+<li><i class="fa-solid fa-check"></i> Instant Answers</li>
+
+<li><i class="fa-solid fa-check"></i> AI Suggestions</li>
+
+<li><i class="fa-solid fa-check"></i> 24×7 Available</li>
+
+</ul>
+
+<a href="/chatbot" class="feature-btn">
+
+Open Chatbot
+
+</a>
+
+</div>
+
+<div class="feature-card">
+
+<div class="feature-top">
+
+<div class="feature-icon">
+
+<i class="fa-solid fa-user-tie"></i>
+
+</div>
+
+<h3>Expert Career Support</h3>
+
+</div>
+
+<p>
+
+Schedule one-on-one guidance sessions with
+professional career advisors.
+
+</p>
+
+<ul>
+
+<li><i class="fa-solid fa-check"></i> Book Appointment</li>
+
+<li><i class="fa-solid fa-check"></i> Expert Guidance</li>
+
+<li><i class="fa-solid fa-check"></i> Career Roadmap</li>
+
+</ul>
+
+<a href="/career-support" class="feature-btn">
+
+Book Session
+
+</a>
+
+</div>
+
+</section>
+
+<!-- ================= RECENT ACTIVITY ================= -->
+
+<section class="activity-section">
+
+    <div class="section-heading">
+        <h2>Recent Activity</h2>
+        <p>Track your latest progress throughout your career journey.</p>
+    </div>
+
+    <div class="activity-container">
+
+        <div class="activity-item completed">
+
+            <div class="activity-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div class="activity-content">
+                <h4>Account Created Successfully</h4>
+                <p>Your Smart AI Career Guide account is ready.</p>
+            </div>
+
+        </div>
+
+        <div class="activity-item completed">
+
+            <div class="activity-icon">
+                <i class="fa-solid fa-envelope-circle-check"></i>
+            </div>
+
+            <div class="activity-content">
+                <h4>Email Verified</h4>
+                <p>Your email has been successfully verified.</p>
+            </div>
+
+        </div>
+
+        <div class="activity-item pending">
+
+            <div class="activity-icon">
+                <i class="fa-solid fa-brain"></i>
+            </div>
+
+            <div class="activity-content">
+                <h4>Psychometric Assessment Pending</h4>
+                <p>Complete the personality assessment to continue.</p>
+            </div>
+
+        </div>
+
+        <div class="activity-item locked">
+
+            <div class="activity-icon">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <div class="activity-content">
+                <h4>AI Career Prediction Locked</h4>
+                <p>Finish all assessments to unlock personalized predictions.</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= AI RECOMMENDATION ================= -->
+
+<section class="recommendation-section">
+
+    <div class="recommendation-card">
+
+        <div class="recommendation-left">
+
+            <span class="recommend-tag">
+                AI Recommendation
+            </span>
+
+            <h2>
+                Your Next Step
+            </h2>
+
+            <p>
+
+                Complete the <strong>Psychometric Assessment</strong> first.
+                Our AI will analyze your personality traits before combining
+                them with your Career Assessment to generate highly
+                personalized career recommendations.
+
+            </p>
+
+            <a href="/psychometric-test"
+               class="recommend-btn">
+
+                Start Psychometric Test
+
+            </a>
+
+        </div>
+
+        <div class="recommendation-right">
+
+            <i class="fa-solid fa-robot ai-big-icon"></i>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= AI TIPS ================= -->
+
+<section class="tips-section">
+
+    <h2>AI Career Tips</h2>
+
+    <div class="tips-grid">
+
+        <div class="tip-card">
+
+            <i class="fa-solid fa-lightbulb"></i>
+
+            <h4>Be Honest</h4>
+
+            <p>
+                Honest answers always generate
+                better career predictions.
+            </p>
+
+        </div>
+
+        <div class="tip-card">
+
+            <i class="fa-solid fa-bullseye"></i>
+
+            <h4>Stay Focused</h4>
+
+            <p>
+                Complete every assessment
+                without skipping questions.
+            </p>
+
+        </div>
+
+        <div class="tip-card">
+
+            <i class="fa-solid fa-chart-simple"></i>
+
+            <h4>Track Progress</h4>
+
+            <p>
+                Monitor your dashboard
+                to unlock the final AI report.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= ACHIEVEMENTS ================= -->
+
+<section class="achievement-section">
+
+    <div class="section-heading">
+        <h2>Your Career Journey</h2>
+        <p>Every completed step brings you closer to the perfect career.</p>
+    </div>
+
+    <div class="achievement-grid">
+
+        <div class="achievement-card">
+
+            <div class="achievement-icon">
+                <i class="fa-solid fa-user-check"></i>
+            </div>
+
+            <h3>Create Profile</h3>
+
+            <p>
+                Register and verify your account to begin your AI-powered career journey.
+            </p>
+
+        </div>
+
+        <div class="achievement-card">
+
+            <div class="achievement-icon">
+                <i class="fa-solid fa-brain"></i>
+            </div>
+
+            <h3>Know Yourself</h3>
+
+            <p>
+                Discover your personality traits and strengths through psychometric analysis.
+            </p>
+
+        </div>
+
+        <div class="achievement-card">
+
+            <div class="achievement-icon">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+
+            <h3>Career Assessment</h3>
+
+            <p>
+                Analyze your academic performance, interests and future goals.
+            </p>
+
+        </div>
+
+        <div class="achievement-card">
+
+            <div class="achievement-icon">
+                <i class="fa-solid fa-chart-pie"></i>
+            </div>
+
+            <h3>AI Prediction</h3>
+
+            <p>
+                Receive your personalized career recommendation with graphical insights.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= QUOTE ================= -->
+
+<section class="dashboard-quote">
+
+    <div class="quote-card">
+
+        <i class="fa-solid fa-quote-left"></i>
+
+        <h2>
+
+            "Success is not choosing the most popular career,
+            it is choosing the career that matches who you are."
+
+        </h2>
+
+        <p>
+
+            — Smart AI Career Guide
+
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="dashboard-footer">
+
+    <div class="footer-content">
+
+        <div class="footer-logo">
+
+            <img src="{{ url_for('static', filename='images/logo.png.jpeg') }}"
+                 class="footer-logo-img"
+                 alt="Smart AI Career Guide logo featuring artificial intelligence and career guidance theme">
+
+            <h2>Smart AI Career Guide</h2>
+
+        </div>
+
+        <p>
+
+            Empowering students with Artificial Intelligence to
+            discover the perfect career path through scientific
+            assessments and intelligent recommendations.
+
+        </p>
+
+        <div class="footer-social">
+
+            <a href="#" aria-label="Visit our GitHub"><i class="fab fa-github"></i></a>
+
+            <a href="#" aria-label="Visit our LinkedIn"><i class="fab fa-linkedin"></i></a>
+
+            <a href="#" aria-label="Visit our Instagram"><i class="fab fa-instagram"></i></a>
+
+            <a href="#" aria-label="Send us an email"><i class="fas fa-envelope"></i></a>
+
+        </div>
+
+        <hr>
+
+        <p class="copyright">
+
+            © 2026 Smart AI Career Guide System.
+            All Rights Reserved.
+
+        </p>
+
+    </div>
+
+</footer>
+
+</body>
+
+</html>

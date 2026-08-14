@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Career Assessment | Smart AI Career Guide</title>
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/career_test.css') }}">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="career-wrapper">
+
+    <!-- Badge -->
+
+    <div class="career-badge">
+
+        <i class="fas fa-robot"></i>
+
+        AI Powered Career Assessment
+
+    </div>
+
+    <!-- Heading -->
+
+    <h1>
+
+        Build Your Career Profile 🚀
+
+    </h1>
+
+    <p class="career-description">
+
+        Help our AI understand your academic background, interests,
+        strengths, goals and lifestyle so we can recommend the most
+        suitable career paths for you.
+
+    </p>
+
+    <!-- Top Cards -->
+
+    <div class="top-cards">
+
+        <div class="top-card">
+
+            <i class="fas fa-user-graduate"></i>
+
+            <h3>Academic</h3>
+
+            <p>Education &amp; Subjects</p>
+
+        </div>
+
+        <div class="top-card">
+
+            <i class="fas fa-brain"></i>
+
+            <h3>Personality</h3>
+
+            <p>Interests &amp; Strengths</p>
+
+        </div>
+
+        <div class="top-card">
+
+            <i class="fas fa-chart-line"></i>
+
+            <h3>AI Prediction</h3>
+
+            <p>Career Recommendation</p>
+
+        </div>
+
+    </div>
+
+    <!-- Progress -->
+
+    <div class="progress-container">
+
+        <div class="progress-bar">
+
+            <div id="progress"></div>
+
+        </div>
+
+        <div id="progressText">
+
+            Step 1 of 9
+
+        </div>
+
+    </div>
+
+    <!-- Dynamic Section -->
+
+    <div id="formContent" class="form-content">
+
+        <!-- JavaScript will load content here -->
+
+    </div>
+
+    <!-- Buttons -->
+
+    <div class="buttons">
+
+        <button id="prevBtn" type="button">
+
+            <i class="fas fa-arrow-left"></i>
+
+            Previous
+
+        </button>
+
+        <button id="nextBtn" type="button">
+
+            Next
+
+            <i class="fas fa-arrow-right"></i>
+
+        </button>
+
+    </div>
+
+</div>
+
+<!-- Loading -->
+
+<div class="loading-screen" id="loadingScreen">
+
+    <div class="loader"></div>
+
+    <h2>Generating Your AI Career Report...</h2>
+
+    <p>
+
+        Please wait while we analyze your profile.
+
+    </p>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/career_test.js') }}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Support - Smart AI Career Guide</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/career_support.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+
+    <!-- Navigation -->
+     <nav class="navbar">
+
+<a href="/" class="logo">
+<img src="{{ url_for('static', filename='images/logo.png.jpeg') }}" alt="">
+<h2>Smart AI Career Guide</h2>
+</a>
+
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/dashboard">Dashboard</a>
+<a href="/chatbot">AI Chatbot</a>
+<a href="/career-support">Career Support</a>
+<a href="/logout" class="logout-btn">Logout</a>
+</div>
+
+</nav>
+
+    <!-- Hero section -->
+<section class="career-hero">
+
+    <div class="career-hero-container">
+
+        <div class="career-left">
+
+            <h1>
+                Accelerate Your
+                career with
+                <span>Expert Mentorship!</span>
+            </h1>
+
+            <p>
+                Connect with experienced career mentors for personalized
+                guidance, resume reviews, interview preparation and
+                career planning to achieve your professional goals.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="#booking" class="primary-btn">
+                    <i class="fas fa-calendar-check"></i>
+                    Book Consultation
+                </a>
+
+                <a href="#experts" class="secondary-btn">
+                    <i class="fas fa-user-tie"></i>
+                    Meet Experts
+                </a>
+
+            </div>
+
+            <div class="hero-stats">
+
+                <div class="hero-stat">
+                    <h2>5000+</h2>
+                    <p>Students Guided</p>
+                </div>
+
+                <div class="hero-stat">
+                    <h2>25+</h2>
+                    <p>Expert Mentors</p>
+                </div>
+
+                <div class="hero-stat">
+                    <h2>98%</h2>
+                    <p>Success Rate</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="career-right">
+
+            <div class="hero-image-box">
+
+                <img src="{{ url_for('static', filename='images/career-support.png') }}"
+                     alt="Career Guidance">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= OUR EXPERTS ================= -->
+
+<section class="experts-section" id="experts">
+
+    <div class="section-title">
+        <span>OUR EXPERTS</span>
+        <h2>Meet Our Career Mentors</h2>
+        <p>Experienced professionals dedicated to helping students build successful careers.</p>
+    </div>
+
+    <div class="experts-grid">
+
+        <div class="expert-card">
+            <img src="{{ url_for('static', filename='images/expert1.jpg') }}" alt="">
+            <h3>Dr. Priya Sharma</h3>
+            <h5>Senior Career Counselor</h5>
+
+            <div class="expert-info">
+                <span><i class="fas fa-star"></i> 4.9</span>
+                <span><i class="fas fa-briefcase"></i> 10+ Years</span>
+            </div>
+
+            <p>Career Planning • Higher Studies • Personal Guidance</p>
+
+            <a href="#booking" class="book-btn">
+                Book Session
+            </a>
+        </div>
+
+        <div class="expert-card">
+            <img src="{{ url_for('static', filename='images/expert2.jpg') }}" alt="">
+            <h3>Rahul Verma</h3>
+            <h5>Software Engineer</h5>
+
+            <div class="expert-info">
+                <span><i class="fas fa-star"></i> 4.8</span>
+                <span><i class="fas fa-code"></i> 8+ Years</span>
+            </div>
+
+            <p>Web Development • AI • Data Science Roadmaps</p>
+
+            <a href="#booking" class="book-btn">
+                Book Session
+            </a>
+        </div>
+
+        <div class="expert-card">
+            <img src="{{ url_for('static', filename='images/expert3.jpg') }}" alt="">
+            <h3>Anjali Patel</h3>
+            <h5>HR Interview Coach</h5>
+
+            <div class="expert-info">
+                <span><i class="fas fa-star"></i> 4.9</span>
+                <span><i class="fas fa-user-tie"></i> 9+ Years</span>
+            </div>
+
+            <p>Resume Building • Interview Preparation</p>
+
+            <a href="#booking" class="book-btn">
+                Book Session
+            </a>
+        </div>
+
+        <div class="expert-card">
+            <img src="{{ url_for('static', filename='images/expert4.jpg') }}" alt="">
+            <h3>Sneha Joshi</h3>
+            <h5>Industry Mentor</h5>
+
+            <div class="expert-info">
+                <span><i class="fas fa-star"></i> 5.0</span>
+                <span><i class="fas fa-chart-line"></i> 12+ Years</span>
+            </div>
+
+            <p>Career Growth • Placement Strategy • Skill Planning</p>
+
+            <a href="#booking" class="book-btn">
+                Book Session
+            </a>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= SERVICES ================= -->
+
+<section class="services-section">
+
+    <div class="section-title">
+        <span>OUR SERVICES</span>
+        <h2>How We Help You</h2>
+    </div>
+
+    <div class="services-grid">
+
+        <div class="service-card">
+            <i class="fas fa-route"></i>
+            <h3>Career Roadmap</h3>
+            <p>Personalized learning path to achieve your dream career.</p>
+        </div>
+
+        <div class="service-card">
+            <i class="fas fa-file-alt"></i>
+            <h3>Resume Review</h3>
+            <p>Professional resume analysis with improvement suggestions.</p>
+        </div>
+
+        <div class="service-card">
+            <i class="fas fa-comments"></i>
+            <h3>Mock Interview</h3>
+            <p>Practice interviews with detailed expert feedback.</p>
+        </div>
+
+        <div class="service-card">
+            <i class="fas fa-graduation-cap"></i>
+            <h3>Higher Studies</h3>
+            <p>Guidance for universities, admissions and scholarships.</p>
+        </div>
+
+        <div class="service-card">
+            <i class="fas fa-laptop-code"></i>
+            <h3>Skill Assessment</h3>
+            <p>Identify strengths, weaknesses and required skills.</p>
+        </div>
+
+        <div class="service-card">
+            <i class="fas fa-briefcase"></i>
+            <h3>Placement Guidance</h3>
+            <p>Preparation strategies for internships and placements.</p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= WHY CHOOSE US ================= -->
+
+<section class="why-section">
+
+    <div class="why-container">
+
+        <div class="why-card">
+            <i class="fas fa-user-graduate"></i>
+            <h4>Personal Guidance</h4>
+        </div>
+
+        <div class="why-card">
+            <i class="fas fa-robot"></i>
+            <h4>AI + Expert Analysis</h4>
+        </div>
+
+        <div class="why-card">
+            <i class="fas fa-calendar-check"></i>
+            <h4>Flexible Sessions</h4>
+        </div>
+
+        <div class="why-card">
+            <i class="fas fa-chart-line"></i>
+            <h4>Career Roadmaps</h4>
+        </div>
+
+    </div>
+
+</section>
+  </body>
+</html>
+
+<!-- ================= BOOK CONSULTATION ================= -->
+
+<section class="booking-section" id="booking">
+
+    <div class="section-title">
+        <span>BOOK A SESSION</span>
+        <h2>Schedule Your Career Consultation</h2>
+        <p>
+            Fill in your details and our team will get in touch with you to
+            confirm your session.
+        </p>
+    </div>
+
+    <div class="booking-container">
+
+        <div class="booking-left">
+
+            <h3>Why Book With Us?</h3>
+
+            <div class="booking-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>One-to-One Career Guidance</span>
+            </div>
+
+            <div class="booking-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Personalized Career Roadmap</span>
+            </div>
+
+            <div class="booking-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Resume &amp; Interview Support</span>
+            </div>
+
+            <div class="booking-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Skill Gap Analysis</span>
+            </div>
+
+            <div class="booking-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Flexible Online Sessions</span>
+            </div>
+
+        </div>
+
+<div class="booking-form-card">
+
+    <form id="bookingForm" action="/submit-career-booking" method="POST">
+
+        <div class="input-row">
+
+            <div class="input-box">
+                <label>Full Name</label>
+                <input type="text" name="name" required>
+            </div>
+
+            <div class="input-box">
+                <label>Email</label>
+                <input type="email" name="email" required>
+            </div>
+
+        </div>
+
+        <div class="input-row">
+
+            <div class="input-box">
+                <label>Phone Number</label>
+                <input type="text" name="phone" required>
+            </div>
+
+            <div class="input-box">
+                <label>Select Expert</label>
+
+                <select name="expert">
+
+                    <option>Dr. Priya Sharma</option>
+                    <option>Rahul Verma</option>
+                    <option>Anjali Patel</option>
+                    <option>Sneha Joshi</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="input-row">
+
+            <div class="input-box">
+                <label>Preferred Date</label>
+                <input type="date" name="preferred_date" required>
+            </div>
+
+            <div class="input-box">
+                <label>Preferred Time</label>
+                <input type="time" name="preferred_time" required>
+            </div>
+
+        </div>
+
+        <div class="input-box">
+
+            <label>Purpose</label>
+
+            <textarea
+                rows="5"
+                name="message"
+                placeholder="Tell us about your career goals..."></textarea>
+
+        </div>
+
+        <button type="submit" class="booking-btn">
+
+            <i class="fas fa-paper-plane"></i>
+
+            Book Consultation
+
+        </button>
+
+    </form>
+
+</div>
+
+<!-- SUCCESS POPUP -->
+
+<div id="successPopup" class="success-popup">
+
+    <i class="fas fa-circle-check"></i>
+
+    <h3>Booking Successful!</h3>
+
+    <p>Your consultation request has been submitted successfully.</p>
+
+</div>
+
+<script>
+
+const bookingForm = document.getElementById("bookingForm");
+
+bookingForm.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    try{
+
+        const response = await fetch("/submit-career-booking",{
+
+            method:"POST",
+
+            body:formData
+
+        });
+
+        const result = await response.json();
+
+        if(result.success){
+
+            const popup = document.getElementById("successPopup");
+
+            popup.classList.add("show");
+
+            bookingForm.reset();
+
+            setTimeout(function(){
+
+                popup.classList.remove("show");
+
+            },3000);
+
+        }
+
+        else{
+
+            alert(result.message);
+
+        }
+
+    }
+
+    catch(error){
+
+        alert("Something went wrong!");
+
+        console.log(error);
+
+    }
+
+});
+
+</script>
+    </div>
+
+</section>
+
+<!-- ================= TESTIMONIALS ================= -->
+
+<section class="testimonial-section">
+
+    <div class="section-title">
+
+        <span>SUCCESS STORIES</span>
+
+        <h2>What Students Say</h2>
+
+    </div>
+
+    <div class="testimonial-grid">
+
+        <div class="testimonial-card">
+
+            <i class="fas fa-quote-left"></i>
+
+            <p>
+
+                The career guidance session helped me discover my interest
+                in Data Science and gave me a clear roadmap.
+
+            </p>
+
+            <h4>Rahul Patil</h4>
+
+            <span>BCA Student</span>
+
+        </div>
+
+        <div class="testimonial-card">
+
+            <i class="fas fa-quote-left"></i>
+
+            <p>
+
+                My resume improved significantly and I felt much more
+                confident during placement interviews.
+
+            </p>
+
+            <h4>Vaishnavi More</h4>
+
+            <span>Computer Engineering</span>
+
+        </div>
+
+        <div class="testimonial-card">
+
+            <i class="fas fa-quote-left"></i>
+
+            <p>
+
+                The AI analysis together with expert advice gave me a
+                clear direction for my future career.
+
+            </p>
+
+            <h4>Aditya Kulkarni</h4>
+
+            <span>BSc Computer Science</span>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= FAQ ================= -->
+
+<section class="faq-section">
+
+    <div class="section-title">
+
+        <span>FAQs</span>
+
+        <h2>Frequently Asked Questions</h2>
+
+    </div>
+
+    <div class="faq-container">
+
+        <details>
+
+            <summary>How long is one consultation session?</summary>
+
+            <p>Each consultation lasts approximately 30 to 45 minutes.</p>
+
+        </details>
+
+        <details>
+
+            <summary>Is the session online?</summary>
+
+            <p>Yes. Sessions are conducted online through Google Meet or Zoom.</p>
+
+        </details>
+
+        <details>
+
+            <summary>Can I reschedule my appointment?</summary>
+
+            <p>Yes. You can request rescheduling before your scheduled session.</p>
+
+        </details>
+
+        <details>
+
+            <summary>Will I receive a career roadmap?</summary>
+
+            <p>Yes. After the consultation, you'll receive personalized recommendations and guidance.</p>
+
+        </details>
+
+    </div>
+
+</section>
+
+<!-- Footer -->
+    <footer>
+      <div class="footer-content ">
+        <div class="footer-section ">
+          <h3>Smart AI Career Guide</h3>
+          <p>Empowering students to find their perfect career path through
+            AI-driven insights</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="/ ">Home</a></li>
+            <li><a href="/login ">Login</a></li>
+            <li><a href="/register ">Register</a></li>
+          </ul>
+        </div>
+        <div class="footer-section ">
+          <h3>Contact</h3>
+          <p>📧 support@smartaicareer.com</p>
+          <p>📞 +1 (555) 123-4567</p>
+        </div>
+      </div>
+      <div class="footer-bottom ">
+        <p>&copy; 2026 Smart AI Career Guide. All rights reserved.</p>
+      </div>
+    </footer>
+

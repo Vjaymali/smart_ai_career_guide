@@ -1,0 +1,409 @@
+[
+  {
+  "title":"Academic Information",
+  "subtitle":"Tell us about your education.",
+  "questions":[
+    {
+      "id":"qualification",
+      "label":"Highest Qualification",
+      "type":"select",
+      "options":[
+        "10th",
+        "12th Science",
+        "12th Commerce",
+        "12th Arts",
+        "Diploma Engineering",
+        "Diploma Pharmacy",
+        "ITI",
+        "BCA",
+        "B.Tech / BE",
+        "B.Sc",
+        "B.Com",
+        "BA",
+        "BBA",
+        "BMS",
+        "B.Pharm",
+        "B.Arch",
+        "LLB",
+        "MBBS",
+        "BDS",
+        "B.Ed",
+        "MCA",
+        "MBA",
+        "M.Tech",
+        "M.Sc",
+        "M.Com",
+        "MA",
+        "PhD",
+        "Other"
+      ]
+    },
+    {
+      "id":"semester",
+      "label":"Current Semester / Year",
+      "type":"select",
+      "options":[
+        "1st Semester",
+        "2nd Semester",
+        "3rd Semester",
+        "4th Semester",
+        "5th Semester",
+        "6th Semester",
+        "7th Semester",
+        "8th Semester",
+        "Graduate",
+        "Working Professional"
+      ]
+    },
+    {
+      "id":"favorite_subjects",
+      "label":"Select your Top Subjects",
+      "type":"checkbox",
+      "options":[
+        "Mathematics",
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "Computer Science",
+        "English",
+        "Economics",
+        "Accountancy",
+        "Business Studies",
+        "History",
+        "Geography",
+        "Political Science",
+        "Psychology",
+        "Sociology",
+        "Statistics",
+        "Commerce",
+        "Drawing",
+        "Agriculture",
+        "Environmental Science",
+        "Physical Education"
+      ]
+    },
+      {
+        "id": "weak_subjects",
+        "label": "Subjects You Find Difficult",
+        "type": "checkbox",
+        "options": [
+         "Mathematics",
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "Computer Science",
+        "English",
+        "Economics",
+        "Accountancy",
+        "Business Studies",
+        "History",
+        "Geography",
+        "Political Science",
+        "Psychology",
+        "Sociology",
+        "Statistics",
+        "Commerce",
+        "Drawing",
+        "Agriculture",
+        "Environmental Science",
+        "Physical Education"
+        ]
+      }
+    ]
+  },
+   {
+      "id":"cgpa",
+      "label":"Current Percentage / CGPA",
+      "type":"text"
+    },
+  {
+    "title": "Interests",
+  "subtitle": "Choose the areas that genuinely interest you.",
+  "questions": [
+    {
+      "id": "interests",
+      "label": "Areas of Interest",
+      "type": "checkbox",
+      "options": [
+        "Artificial Intelligence",
+        "Programming",
+        "Business",
+        "Finance",
+        "Healthcare",
+        "Teaching",
+        "Design",
+        "Content Creation",
+        "Research",
+        "Law",
+        "Marketing",
+        "Public Speaking",
+        "Writing",
+        "Entrepreneurship",
+        "Cyber Security",
+        "Data Analytics",
+        "Robotics",
+        "Travel",
+        "Sports",
+        "Music"
+      ]
+    }
+  ]
+},
+{
+  "title": "Hobbies & Activities",
+  "subtitle": "Tell us what you enjoy doing in your free time.",
+  "questions": [
+    {
+      "id": "hobbies",
+      "label": "Select Your Hobbies",
+      "type": "checkbox",
+      "options": [
+        "Reading Books",
+        "Coding",
+        "Gaming",
+        "Photography",
+        "Drawing",
+        "Painting",
+        "Music",
+        "Dancing",
+        "Travelling",
+        "Blogging",
+        "Video Editing",
+        "Public Speaking",
+        "Sports",
+        "Cooking",
+        "Volunteering",
+        "Gardening"
+      ]
+    }
+  ]
+},
+{
+  "title": "Personal Strengths",
+  "subtitle": "Select the qualities that describe you best.",
+  "questions": [
+    {
+      "id": "strengths",
+      "label": "Your Strengths",
+      "type": "checkbox",
+      "options": [
+        "Leadership",
+        "Creativity",
+        "Problem Solving",
+        "Communication",
+        "Critical Thinking",
+        "Decision Making",
+        "Analytical Thinking",
+        "Teamwork",
+        "Adaptability",
+        "Time Management",
+        "Confidence",
+        "Patience",
+        "Innovation",
+        "Responsibility",
+        "Attention to Detail",
+        "Emotional Intelligence"
+      ]
+    }
+  ]
+},
+{
+  "title": "Interests",
+  "subtitle": "Choose the areas that genuinely interest you.",
+  "questions": [
+    {
+      "id": "interests",
+      "label": "Areas of Interest",
+      "type": "checkbox",
+      "options": [
+        "Artificial Intelligence",
+        "Programming",
+        "Business",
+        "Finance",
+        "Healthcare",
+        "Teaching",
+        "Design",
+        "Content Creation",
+        "Research",
+        "Law",
+        "Marketing",
+        "Public Speaking",
+        "Writing",
+        "Entrepreneurship",
+        "Cyber Security",
+        "Data Analytics",
+        "Robotics",
+        "Travel",
+        "Sports",
+        "Music"
+      ]
+    }
+  ]
+},
+{
+  "title": "Hobbies & Activities",
+  "subtitle": "Tell us what you enjoy doing in your free time.",
+  "questions": [
+    {
+      "id": "hobbies",
+      "label": "Select Your Hobbies",
+      "type": "checkbox",
+      "options": [
+        "Reading Books",
+        "Coding",
+        "Gaming",
+        "Photography",
+        "Drawing",
+        "Painting",
+        "Music",
+        "Dancing",
+        "Travelling",
+        "Blogging",
+        "Video Editing",
+        "Public Speaking",
+        "Sports",
+        "Cooking",
+        "Volunteering",
+        "Gardening"
+      ]
+    }
+  ]
+},
+{
+  "title": "Personal Strengths",
+  "subtitle": "Select the qualities that describe you best.",
+  "questions": [
+    {
+      "id": "strengths",
+      "label": "Your Strengths",
+      "type": "checkbox",
+      "options": [
+        "Leadership",
+        "Creativity",
+        "Problem Solving",
+        "Communication",
+        "Critical Thinking",
+        "Decision Making",
+        "Analytical Thinking",
+        "Teamwork",
+        "Adaptability",
+        "Time Management",
+        "Confidence",
+        "Patience",
+        "Innovation",
+        "Responsibility",
+        "Attention to Detail",
+        "Emotional Intelligence"
+      ]
+    }
+  ]
+},
+{
+  "title": "Work Preferences",
+  "subtitle": "Tell us how you prefer to work.",
+  "questions": [
+    {
+      "id": "work_environment",
+      "label": "Preferred Work Environment",
+      "type": "radio",
+      "options": [
+        "Office",
+        "Remote",
+        "Hybrid",
+        "No Preference"
+      ]
+    },
+    {
+      "id": "work_style",
+      "label": "How do you like to work?",
+      "type": "radio",
+      "options": [
+        "Individually",
+        "In a Team",
+        "Both"
+      ]
+    }
+  ]
+},
+{
+  "title": "Lifestyle & Constraints",
+  "subtitle": "Help us recommend careers that match your lifestyle.",
+  "questions": [
+    {
+      "id": "relocation",
+      "label": "Are you willing to relocate?",
+      "type": "radio",
+      "options": [
+        "Yes",
+        "No",
+        "Maybe"
+      ]
+    },
+    {
+      "id": "higher_studies",
+      "label": "Are you interested in higher studies?",
+      "type": "radio",
+      "options": [
+        "Yes",
+        "No",
+        "Maybe"
+      ]
+    },
+    {
+      "id": "work_life",
+      "label": "What matters more to you?",
+      "type": "radio",
+      "options": [
+        "High Salary",
+        "Work-Life Balance",
+        "Job Security",
+        "Career Growth",
+        "Social Impact"
+      ]
+    }
+  ]
+},
+{
+  "title": "Career Goals",
+  "subtitle": "Share your future ambitions.",
+  "questions": [
+    {
+      "id": "career_goal",
+      "label": "Which career path attracts you the most?",
+      "type": "checkbox",
+      "options": [
+        "Technology",
+        "Business",
+        "Healthcare",
+        "Government",
+        "Education",
+        "Research",
+        "Creative Arts",
+        "Law",
+        "Finance",
+        "Media",
+        "Entrepreneurship",
+        "Still Exploring"
+      ]
+    },
+    {
+      "id": "dream_job",
+      "label": "Dream Job (Optional)",
+      "type": "text",
+      "placeholder": "Example: AI Engineer"
+    }
+  ]
+},
+{
+  "title": "Final Review",
+  "subtitle": "Anything else you want our AI to know?",
+  "questions": [
+    {
+      "id": "additional_info",
+      "label": "Additional Information",
+      "type": "textarea",
+      "placeholder": "Mention any achievements, certifications, projects, goals or anything that may help us recommend better careers..."
+    }
+  ]
+}
+]

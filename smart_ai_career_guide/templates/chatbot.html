@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Career Chatbot | Smart AI Career Guide</title>
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/chatbot.css') }}">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="chat-navbar">
+
+    <div class="chat-logo">
+
+        <img src="{{ url_for('static', filename='images/logo.png.jpeg') }}" alt="Smart AI Career Guide logo">
+
+        <h2>Smart AI Career Guide</h2>
+
+    </div>
+
+    <div class="chat-nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/dashboard">Dashboard</a>
+
+        <a href="/chatbot" class="active">AI Chatbot</a>
+
+        <a href="/career-support">Career Support</a>
+
+        <a href="/logout">Logout</a>
+
+    </div>
+
+</header>
+
+<!-- ================= CHATBOT HERO ================= -->
+
+<section class="chatbot-hero">
+
+    <div class="chatbot-heading">
+
+        <div class="ai-badge">
+
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+            AI Career Assistant
+
+        </div>
+
+        <h1>
+
+            Ask Anything About
+
+            <span class="gradient-text">
+
+                Your Career
+
+            </span>
+
+        </h1>
+
+        <p>
+
+            Get personalized career guidance, learning roadmaps,
+            interview preparation, skill recommendations and much more
+            powered by Artificial Intelligence.
+
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ================= CHAT AREA ================= -->
+
+<section class="chat-section">
+
+<div class="chat-container">
+
+<div class="chat-header">
+
+<div class="chat-header-left">
+
+<div class="bot-avatar">
+
+<i class="fa-solid fa-robot"></i>
+
+</div>
+
+<div>
+
+<h3>Career AI Assistant</h3>
+
+<span class="online-status">
+
+<i class="fa-solid fa-circle"></i>
+
+Online
+
+</span>
+
+</div>
+
+</div>
+
+<button id="clearChat" class="clear-chat" type="button">
+
+<i class="fa-solid fa-trash"></i>
+
+Clear Chat
+
+</button>
+
+</div>
+
+<div id="chatMessages" class="chat-messages">
+
+<div class="bot-message">
+
+<div class="message-icon">
+
+<i class="fa-solid fa-robot"></i>
+
+</div>
+
+<div class="message-content">
+
+<h4>AI Career Assistant</h4>
+
+<p>
+
+👋 Hello! Welcome to Smart AI Career Guide.
+
+I'm here to help you with:
+
+✅ Career Suggestions
+
+✅ Skills Required
+
+✅ Roadmaps
+
+✅ Resume Guidance
+
+✅ Interview Preparation
+
+✅ Learning Resources
+
+Ask me anything!
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Typing Indicator -->
+
+<div id="typingIndicator" class="typing-indicator" style="display:none;">
+
+<div class="message-icon">
+
+<i class="fa-solid fa-robot"></i>
+
+</div>
+
+<div class="typing-box">
+
+<span></span>
+
+<span></span>
+
+<span></span>
+
+</div>
+
+</div>
+
+<!-- Chat Input -->
+
+<div class="chat-input-area">
+
+<input
+type="text"
+id="userInput"
+placeholder="Ask anything about careers, skills, roadmap, interviews..."
+autocomplete="off">
+
+<button id="sendBtn" type="button" aria-label="Send message" title="Send">
+    <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+</button>
+
+</div>
+
+<div class="quick-suggestions">
+
+<button class="suggestion-btn" type="button">
+Career Options After BCA
+</button>
+
+<button class="suggestion-btn" type="button">
+Become Data Scientist
+</button>
+
+<button class="suggestion-btn" type="button">
+Resume Tips
+</button>
+
+<button class="suggestion-btn" type="button">
+Interview Preparation
+</button>
+
+<button class="suggestion-btn" type="button">
+Highest Paying IT Jobs
+</button>
+
+<button class="suggestion-btn" type="button">
+AI Engineer Roadmap
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= FEATURES ================= -->
+
+<section class="chat-features">
+
+<div class="chat-feature-card">
+
+<i class="fa-solid fa-user-graduate"></i>
+
+<h3>Career Guidance</h3>
+
+<p>
+
+Receive personalized career recommendations
+based on your interests and goals.
+
+</p>
+
+</div>
+
+<div class="chat-feature-card">
+
+<i class="fa-solid fa-route"></i>
+
+<h3>Learning Roadmaps</h3>
+
+<p>
+
+Get complete step-by-step learning paths
+for your dream career.
+
+</p>
+
+</div>
+
+<div class="chat-feature-card">
+
+<i class="fa-solid fa-file-lines"></i>
+
+<h3>Resume Help</h3>
+
+<p>
+
+Improve your resume with professional
+AI-powered suggestions.
+
+</p>
+
+</div>
+
+<div class="chat-feature-card">
+
+<i class="fa-solid fa-briefcase"></i>
+
+<h3>Interview Preparation</h3>
+
+<p>
+
+Practice interview questions and
+prepare confidently.
+
+</p>
+
+</div>
+
+</section>
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="chatbot-footer">
+
+    <img src="{{ url_for('static', filename='images/logo.png.jpeg') }}"
+         class="footer-logo"
+         alt="Logo">
+
+    <h2>Smart AI Career Guide</h2>
+
+    <p>
+        Your intelligent career companion. Discover careers, learn new skills,
+        and get AI-powered guidance anytime.
+    </p>
+
+</footer>
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+const chatMessages=document.getElementById("chatMessages");
+const userInput=document.getElementById("userInput");
+const sendBtn=document.getElementById("sendBtn");
+const typing=document.getElementById("typingIndicator");
+const clearBtn=document.getElementById("clearChat");
+
+function addUserMessage(message){
+
+chatMessages.innerHTML+=`
+<div class="user-message">
+<div class="message-content user">
+<p>${message}</p>
+</div>
+<div class="message-icon user-icon">
+<i class="fa-solid fa-user"></i>
+</div>
+</div>`;
+
+chatMessages.scrollTop=chatMessages.scrollHeight;
+
+}
+
+function addBotMessage(message){
+
+chatMessages.innerHTML+=`
+<div class="bot-message">
+
+<div class="message-icon">
+<i class="fa-solid fa-robot"></i>
+</div>
+
+<div class="message-content">
+
+<h4>AI Career Assistant</h4>
+
+<p>${message}</p>
+
+</div>
+
+</div>`;
+
+chatMessages.scrollTop=chatMessages.scrollHeight;
+
+}
+
+async function sendMessage(){
+
+const message=userInput.value.trim();
+
+if(message==="") return;
+
+addUserMessage(message);
+
+userInput.value="";
+
+typing.style.display="flex";
+
+chatMessages.scrollTop=chatMessages.scrollHeight;
+
+try{
+
+const response=await fetch("/chat_api",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+message:message
+})
+
+});
+
+const data=await response.json();
+
+typing.style.display="none";
+
+if(data.reply){
+
+addBotMessage(data.reply);
+
+}else{
+
+addBotMessage("Sorry, I couldn't generate a response.");
+
+}
+
+}catch(error){
+
+typing.style.display="none";
+
+addBotMessage("Unable to connect to AI server.");
+
+}
+
+}
+
+sendBtn.addEventListener("click",sendMessage);
+
+userInput.addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+
+sendMessage();
+
+}
+
+});
+
+document.querySelectorAll(".suggestion-btn").forEach(button=>{
+
+button.addEventListener("click",function(){
+
+userInput.value=this.innerText;
+
+sendMessage();
+
+});
+
+});
+
+clearBtn.addEventListener("click",function(){
+
+chatMessages.innerHTML=`
+
+<div class="bot-message">
+
+<div class="message-icon">
+
+<i class="fa-solid fa-robot"></i>
+
+</div>
+
+<div class="message-content">
+
+<h4>AI Career Assistant</h4>
+
+<p>
+
+👋 Hello! Welcome back.
+
+I'm ready to help you with career guidance,
+roadmaps, interview preparation, resume building,
+skills, certifications and much more.
+
+How can I help you today?
+
+</p>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+</script>
+
+</body>
+
+</html>
