@@ -63,7 +63,26 @@ function loadSection(){
 
     formContent.innerHTML=html;
 
-    restoreAnswers();
+function restoreAnswers(){
+    const section=sections[currentSection];
+    if(!section||!section.questions)return;
+    section.questions.forEach(question=>{
+        if(!(question.id in answers))return;
+        if(question.type==="text"||question.type==="number"||question.type==="textarea"||question.type==="select"){
+            const element=document.getElementById(question.id);
+            if(element)element.value=answers[question.id]||"";
+        }else if(question.type==="radio"){
+            document.querySelectorAll(`input[name="${question.id}"]`).forEach(item=>{
+                item.checked=item.value===answers[question.id];
+            });
+        }else if(question.type==="checkbox"){
+            const selected=Array.isArray(answers[question.id])?answers[question.id]:[];
+            document.querySelectorAll(`input[data-id="${question.id}"]`).forEach(item=>{
+                item.checked=selected.includes(item.value);
+            });
+        }
+    });
+}
 
     prevBtn.style.display=currentSection===0?"none":"inline-block";
 
@@ -190,46 +209,19 @@ function renderQuestion(question){
 }
 
 function saveAnswers(){
-
     const section=sections[currentSection];
-
+    if(!section||!section.questions)return;
     section.questions.forEach(question=>{
-
-        switch(question.type){
-
-            case "text":
-            case "number":
-            case "textarea":
-            case "select":
-
-                answers[question.id]=document.getElementById(question.id).value;
-
-            break;
-
-            case "radio":
-
-                const radio=document.querySelector(`input[name="${question.id}"]:checked`);
-
-                answers[question.id]=radio?radio.value:"";
-
-            break;
-
-            case "checkbox":
-
-                answers[question.id]=[];
-
-                document.querySelectorAll(`input[data-id="${question.id}"]:checked`).forEach(item=>{
-
-                    answers[question.id].push(item.value);
-
-                });
-
-            break;
-
+        if(question.type==="text"||question.type==="number"||question.type==="textarea"||question.type==="select"){
+            const element=document.getElementById(question.id);
+            if(element)answers[question.id]=element.value;
+        }else if(question.type==="radio"){
+            const radio=document.querySelector(`input[name="${question.id}"]:checked`);
+            answers[question.id]=radio?radio.value:"";
+        }else if(question.type==="checkbox"){
+            answers[question.id]=Array.from(document.querySelectorAll(`input[data-id="${question.id}"]:checked`)).map(item=>item.value);
         }
-
     });
-
 }
 
 function restoreAnswers(){
@@ -285,98 +277,44 @@ function restoreAnswers(){
 
 }
 
-prevBtn.onclick=function(){
-
+prevBtn.addEventListener("click",()=>{
+    if(currentSection<=0)return;
     saveAnswers();
+    currentSection--;
+    loadSection();
+});
 
-    if(currentSection>0){
-
-        currentSection--;
-
-        loadSection();
-
-    }
-
-};
-
-nextBtn.onclick=function(){
-
+nextBtn.addEventListener("click",()=>{
+    if(!sections.length)return;
     saveAnswers();
-
     if(currentSection<sections.length-1){
-
         currentSection++;
-
         loadSection();
-
     }else{
-
         submitCareerTest();
-
     }
-
-};
+});
 
 async function submitCareerTest(){
-
     loadingScreen.classList.add("active");
-
     try{
-
         const response=await fetch("/submit-career-test",{
-
             method:"POST",
-
             headers:{
                 "Content-Type":"application/json"
             },
-
-            body:JSON.stringify({
-                answers:answers
-            })
-
+            body:JSON.stringify(answers)
         });
-
         const data=await response.json();
-
-        loadingScreen.classList.remove("active");
-
         if(data.success){
-
-            alert("Career Test Submitted Successfully!");
-
-            window.location.href="/dashboard";
-
-        }else{
-
-            alert(data.message);
-
+    window.location.href="/generate-result";
+        } else{
+            loadingScreen.classList.remove("active");
+            alert(data.message||"Unable to save career test.");
         }
-
     }catch(error){
-
-        console.error(error);
-
+        console.error("Career test submission error:",error);
         loadingScreen.classList.remove("active");
-
-        alert("Server Error");
-
+        alert("Server error while submitting career test.");
     }
-
 }
-
-document.addEventListener("keydown",function(e){
-
-    if(e.key==="ArrowRight"){
-
-        nextBtn.click();
-
-    }
-
-    if(e.key==="ArrowLeft"){
-
-        prevBtn.click();
-
-    }
-
-});

@@ -47,9 +47,17 @@ def get_db_connection():
 
 # ================= CAREER DATABASE LOADER =================
 def load_careers():
-    with open('careers_database.json', 'r') as f:
-        data = json.load(f)
-    return data['careers']
+    base_dir=os.path.dirname(os.path.abspath(__file__))
+    file_path=os.path.join(base_dir,"static","data","careers_database.json")
+    with open(file_path,"r",encoding="utf-8") as f:
+        data=json.load(f)
+    if isinstance(data,dict) and "careers" in data:
+        data=data["careers"]
+    if isinstance(data,dict):
+        return list(data.values())
+    if isinstance(data,list):
+        return data
+    return []
 
 # ================= OTP STORAGE =================
 otp_storage = {}
@@ -246,29 +254,54 @@ def login():
 def dashboard():
     if "user_id" not in session:
         return redirect("/login")
-    
-    user_id = session["user_id"]
-    db = get_db_connection()
-    cursor = db.cursor(dictionary=True)
-    
-    # Check if tests completed
-    cursor.execute("SELECT * FROM psychometric_data WHERE user_id=%s ORDER BY test_date DESC LIMIT 1", (user_id,))
-    psych_completed = cursor.fetchone() is not None
-    
-    cursor.execute("SELECT * FROM career_test_data WHERE user_id=%s ORDER BY test_date DESC LIMIT 1", (user_id,))
-    career_completed = cursor.fetchone() is not None
-    
-    cursor.execute("SELECT * FROM career_results WHERE user_id=%s ORDER BY result_date DESC LIMIT 1", (user_id,))
-    result = cursor.fetchone()
-    
-    cursor.close()
-    db.close()
-    
-    return render_template("dashboard.html", 
-                         name=session["name"],
-                         psych_completed=psych_completed,
-                         career_completed=career_completed,
-                         result=result)
+
+    user_id=session["user_id"]
+    db=get_db_connection()
+
+    if not db:
+        return "Database connection error"
+
+    cursor=db.cursor(dictionary=True)
+
+    try:
+        cursor.execute(
+            "SELECT id FROM psychometric_data WHERE user_id=%s LIMIT 1",
+            (user_id,)
+        )
+        psych_record=cursor.fetchone()
+
+        cursor.execute(
+            "SELECT id FROM career_test_data WHERE user_id=%s LIMIT 1",
+            (user_id,)
+        )
+        career_record=cursor.fetchone()
+
+        psych_completed=psych_record is not None
+        career_completed=career_record is not None
+
+        result=None
+
+        if psych_completed and career_completed:
+            cursor.execute(
+                "SELECT * FROM career_test_data WHERE user_id=%s LIMIT 1",
+                (user_id,)
+            )
+            result=cursor.fetchone()
+
+        return render_template(
+            "dashboard.html",
+            psych_completed=psych_completed,
+            career_completed=career_completed,
+            result=result
+        )
+
+    except Exception as e:
+        print("Dashboard Error:",e)
+        return f"Dashboard Error: {e}",500
+
+    finally:
+        cursor.close()
+        db.close()
 
 # ================= PSYCHOMETRIC TEST =================
 @app.route("/psychometric-test")
@@ -378,239 +411,532 @@ def submit_psychometric():
 def career_test():
     if "user_id" not in session:
         return redirect("/login")
-    return render_template("career_test.html")
-
-# ================= SUBMIT CAREER TEST =================
-@app.route("/submit-career-test", methods=["POST"])
-def submit_career_test():
-
-    if "user_id" not in session:
-        return jsonify({"success":False,"message":"Login required"}),401
-
-    data=request.get_json()
-
-    if not data:
-        return jsonify({"success":False,"message":"No data received"}),400
-
-    answers=data.get("answers",{})
 
     db=get_db_connection()
-    cursor=db.cursor()
+    if not db:
+        return "Database connection error"
 
-    cursor.execute(
-        "DELETE FROM career_test_data WHERE user_id=%s",
-        (session["user_id"],)
-    )
+    cursor=db.cursor(dictionary=True)
 
-    cursor.execute("""
-        INSERT INTO career_test_data
-        (user_id,career_answers)
-        VALUES(%s,%s)
-    """,
-    (
-        session["user_id"],
-        json.dumps(answers)
-    ))
+    try:
+        cursor.execute(
+            "SELECT id FROM career_test_data WHERE user_id=%s LIMIT 1",
+            (session["user_id"],)
+        )
+        completed=cursor.fetchone()
 
-    db.commit()
+        return render_template(
+            "career_test.html",
+            assessment_completed=bool(completed)
+        )
 
-    cursor.close()
-    db.close()
+    except Exception as e:
+        print("Career Test Page Error:",e)
+        return f"Career Test Error: {e}"
 
-    return jsonify({
-        "success":True,
-        "message":"Career Test Completed Successfully"
-    })
+    finally:
+        cursor.close()
+        db.close()
+
+# ================= SUBMIT CAREER TEST =================
+@app.route("/submit-career-test",methods=["POST"])
+def submit_career_test():
+    if "user_id" not in session:
+        return jsonify({
+            "success":False,
+            "message":"Login required"
+        }),401
+
+    db=get_db_connection()
+    if not db:
+        return jsonify({
+            "success":False,
+            "message":"Database connection error"
+        }),500
+
+    cursor=db.cursor(dictionary=True)
+
+    try:
+        user_id=session["user_id"]
+
+        cursor.execute(
+            "SELECT id FROM career_test_data WHERE user_id=%s LIMIT 1",
+            (user_id,)
+        )
+        existing=cursor.fetchone()
+
+        if existing:
+            return jsonify({
+                "success":False,
+                "already_completed":True,
+                "message":"You have already completed the Career Test."
+            }),409
+
+        data=request.get_json()
+
+        if not data:
+            return jsonify({
+                "success":False,
+                "message":"No data received"
+            }),400
+
+        answers=data.get("answers",{})
+
+        cursor.execute("""
+            INSERT INTO career_test_data
+            (user_id,career_answers)
+            VALUES(%s,%s)
+        """,(
+            user_id,
+            json.dumps(answers)
+        ))
+
+        db.commit()
+
+        return jsonify({
+            "success":True,
+            "message":"Career Test Completed Successfully"
+        })
+
+    except Exception as e:
+        db.rollback()
+        print("Career Test Error:",e)
+        return jsonify({
+            "success":False,
+            "message":str(e)
+        }),500
+
+    finally:
+        cursor.close()
+        db.close()
 
 # ================= CAREER PREDICTION ENGINE =================
-def calculate_career_match(career, psychometric, career_test, user_subjects):
-    """
-    Calculate career match score with weighted algorithm
-    - Academic Performance: 40%
-    - Psychometric Scores: 30%
-    - Interests & Skills: 30%
-    """
-    
-    # 1. Academic Score (40%)
-    academic_score = 0
-    subject_list = [s.strip().lower() for s in user_subjects.split(',')]
-    
-    # Check if required subjects match
-    required_match = sum(1 for subj in career['required_subjects'] 
-                        if any(subj.lower() in s for s in subject_list))
-    
-    if len(career['required_subjects']) > 0:
-        academic_score = (required_match / len(career['required_subjects'])) * 100
-    else:
-        academic_score = 50  # Neutral score
-    
-    # Apply minimum score requirements (if applicable)
-    if 'min_math_score' in career:
-        # Assume average performance if we don't have actual scores
-        academic_score *= 0.9  # Slight reduction for not having exact scores
-    
-    academic_weight = academic_score * 0.40
-    
-    # 2. Psychometric Score (30%)
-    psych_match = 0
-    psych_total = 0
-    
-    for key, required_score in career['personality_fit'].items():
-        user_score = psychometric.get(f"{key}_score", 0)
-        # Normalize to 0-100 scale (assuming max score is 125 for 25 questions * 5 points)
-        normalized_user = (user_score / 125) * 100
-        
-        # Calculate how close the user is to the required personality
-        difference = abs(normalized_user - required_score)
-        match_percentage = max(0, 100 - difference)
-        
-        psych_match += match_percentage
-        psych_total += 1
-    
-    psychometric_score = (psych_match / psych_total) if psych_total > 0 else 50
-    psychometric_weight = psychometric_score * 0.30
-    
-    # 3. Interest & Skills Score (30%)
-    interest_score = 0
-    
-    # Check interest match
-    user_interest = career_test.get('interests', '').lower()
-    career_interests = [i.lower() for i in career.get('interests', [])]
-    
-    interest_match = any(ci in user_interest for ci in career_interests)
-    if interest_match:
-        interest_score += 70
-    else:
-        interest_score += 30
-    
-    # Check skills match
-    user_skills = career_test.get('skills', '').lower()
-    career_skills = [s.lower() for s in career.get('skills', [])]
-    
-    skill_matches = sum(1 for cs in career_skills if cs in user_skills)
-    if len(career_skills) > 0:
-        interest_score += (skill_matches / len(career_skills)) * 30
-    
-    interest_weight = interest_score * 0.30
-    
-    # Total weighted score
-    total_score = academic_weight + psychometric_weight + interest_weight
-    
-    # Apply elimination rules
-    if 'min_math_score' in career and 'Math' not in user_subjects:
-        total_score *= 0.7  # Penalty for missing critical subject
-    
-    return {
-        'total_score': round(total_score, 2),
-        'academic_score': round(academic_score, 2),
-        'psychometric_score': round(psychometric_score, 2),
-        'interest_score': round(interest_score, 2),
-        'confidence': round(min(total_score, 99), 2)  # Cap at 99%
+def load_careers():
+    file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)),"static","data","careers_database.json")
+    with open(file_path,"r",encoding="utf-8") as f:
+        data=json.load(f)
+    careers=data.get("careers",[]) if isinstance(data,dict) else data
+    return careers if isinstance(careers,list) else []
+
+def normalize_list(value):
+    if isinstance(value,list):
+        return [str(x).strip().lower() for x in value if str(x).strip()]
+    if isinstance(value,str):
+        try:
+            parsed=json.loads(value)
+            if isinstance(parsed,list):
+                return [str(x).strip().lower() for x in parsed if str(x).strip()]
+        except:
+            pass
+        return [x.strip().lower() for x in value.split(",") if x.strip()]
+    return []
+
+def normalize_text(value):
+    if isinstance(value,list):
+        return " ".join(str(x) for x in value).lower()
+    return str(value or "").strip().lower()
+
+def subject_match(user_subjects,career_subjects):
+    user_subjects=normalize_list(user_subjects)
+    career_subjects=normalize_list(career_subjects)
+    if not career_subjects:
+        return 50
+    matches=0
+    for required in career_subjects:
+        required=required.lower()
+        if any(required in user or user in required for user in user_subjects):
+            matches+=1
+    return round((matches/len(career_subjects))*100,2)
+
+def keyword_match(user_values,career_values):
+    user_values=normalize_list(user_values)
+    career_values=normalize_list(career_values)
+    if not career_values:
+        return 50
+    user_text=" ".join(user_values)
+    matches=0
+    for item in career_values:
+        item=item.lower()
+        if item in user_text or any(word in user_text for word in item.replace("-"," ").replace("/"," ").split() if len(word)>3):
+            matches+=1
+    return round((matches/len(career_values))*100,2)
+
+def calculate_career_match(career,psychometric,answers):
+    favorite=normalize_list(answers.get("favorite_subjects",[]))
+    weak=normalize_list(answers.get("weak_subjects",[]))
+    interests=normalize_list(answers.get("interests",[]))
+    hobbies=normalize_list(answers.get("hobbies",[]))
+    strengths=normalize_list(answers.get("strengths",[]))
+    career_goals=normalize_list(answers.get("career_goal",[]))
+    qualification=normalize_text(answers.get("qualification",""))
+    work_environment=normalize_text(answers.get("work_environment",""))
+    work_style=normalize_text(answers.get("work_style",""))
+    work_life=normalize_text(answers.get("work_life",""))
+    higher_studies=normalize_text(answers.get("higher_studies",""))
+    relocation=normalize_text(answers.get("relocation",""))
+    dream_job=normalize_text(answers.get("dream_job",""))
+    additional_info=normalize_text(answers.get("additional_info",""))
+    all_profile_text=" ".join(favorite+interests+hobbies+strengths+career_goals+[qualification,work_environment,work_style,work_life,higher_studies,relocation,dream_job,additional_info])
+
+    required=career.get("required_subjects",[])
+    optional=career.get("optional_subjects",[])
+    career_interests=career.get("interests",[])
+    career_skills=career.get("skills",[])
+    personality_fit=career.get("personality_fit",{})
+    category=normalize_text(career.get("category",""))
+    career_name=normalize_text(career.get("name",""))
+
+    required_score=subject_match(favorite,required)
+    optional_score=subject_match(favorite,optional) if optional else 50
+    weak_penalty=0
+    for subject in normalize_list(required):
+        if any(subject in weak or weak in subject for weak in normalize_list(weak)):
+            weak_penalty+=15
+    academic_score=max(0,round((required_score*0.75)+(optional_score*0.25)-weak_penalty,2))
+
+    try:
+        cgpa=float(str(answers.get("cgpa","")).replace("%","").strip())
+        if cgpa>10:
+            cgpa=min(cgpa,100)
+            academic_performance=cgpa
+        else:
+            academic_performance=min(cgpa*10,100)
+        academic_score=round((academic_score*0.75)+(academic_performance*0.25),2)
+    except:
+        pass
+
+    psych_matches=[]
+    for trait,target in personality_fit.items():
+        try:
+            user_score=float(psychometric.get(f"{trait}_score",0))
+            normalized_user=min((user_score/125)*100,100)
+            target=float(target)
+            match=max(0,100-abs(normalized_user-target))
+            psych_matches.append(match)
+        except:
+            continue
+    psychometric_score=round(sum(psych_matches)/len(psych_matches),2) if psych_matches else 50
+
+    interest_score=keyword_match(interests+hobbies,career_interests)
+    skill_score=keyword_match(strengths,career_skills)
+
+    goal_category_map={
+        "technology":["technology","tech"],
+        "business":["business","entrepreneurship"],
+        "healthcare":["healthcare"],
+        "government":["government"],
+        "education":["education"],
+        "research":["research"],
+        "creative arts":["creative","creative arts"],
+        "law":["law"],
+        "finance":["finance"],
+        "media":["media"],
+        "entrepreneurship":["business","entrepreneurship"]
     }
 
+    goal_score=50
+    if career_goals:
+        goal_hits=0
+        for goal in career_goals:
+            goal=goal.lower()
+            if goal=="still exploring":
+                continue
+            possible=goal_category_map.get(goal,[goal])
+            if any(x in category or x in career_name for x in possible):
+                goal_hits+=1
+        goal_score=round((goal_hits/max(len([g for g in career_goals if g!="still exploring"]),1))*100,2)
+
+    dream_score=0
+    if dream_job:
+        dream_words=[w for w in dream_job.replace("/"," ").replace("-"," ").split() if len(w)>2]
+        dream_hits=sum(1 for word in dream_words if word in career_name or word in category)
+        dream_score=round((dream_hits/max(len(dream_words),1))*100,2)
+
+    profile_interest=round((interest_score*0.45)+(skill_score*0.30)+(goal_score*0.15)+(dream_score*0.10),2)
+
+    work_score=50
+    if work_environment:
+        environment_text=category+" "+career_name+" "+normalize_text(career.get("description",""))
+        if work_environment in environment_text:
+            work_score=100
+
+    work_style_score=50
+    if work_style=="individually":
+        work_style_score=70
+    elif work_style=="in a team":
+        work_style_score=70
+    elif work_style=="both":
+        work_style_score=90
+
+    lifestyle_score=50
+    if work_life:
+        lifestyle_text=normalize_text(career.get("growth_prospects",""))+" "+normalize_text(career.get("salary_range",""))
+        if work_life=="career growth" and "excellent" in lifestyle_text:
+            lifestyle_score=90
+        elif work_life=="high salary" and "$" in lifestyle_text:
+            lifestyle_score=85
+        elif work_life=="job security":
+            lifestyle_score=65
+        elif work_life=="social impact" and any(x in category for x in ["health","social","education","government"]):
+            lifestyle_score=90
+
+    preference_score=round((work_score*0.40)+(work_style_score*0.25)+(lifestyle_score*0.35),2)
+
+    total_score=round(
+        (academic_score*0.25)+
+        (psychometric_score*0.35)+
+        (profile_interest*0.25)+
+        (preference_score*0.15),
+        2
+    )
+
+    if required_score==0:
+        total_score=round(total_score*0.85,2)
+
+    return {
+        "total_score":min(total_score,99),
+        "academic_score":academic_score,
+        "psychometric_score":psychometric_score,
+        "interest_score":profile_interest,
+        "confidence":min(round(total_score,2),99)
+    }
+
+def generate_career_roadmap(career):
+    education=career.get("education","")
+    required=career.get("required_subjects",[])
+    skills=career.get("skills",[])
+    interests=career.get("interests",[])
+    growth=career.get("growth_prospects","")
+
+    roadmap=[]
+
+    if education:
+        roadmap.append({
+            "step":1,
+            "title":"Build Your Educational Foundation",
+            "description":f"Complete the recommended educational pathway: {education}."
+        })
+
+    if required:
+        roadmap.append({
+            "step":len(roadmap)+1,
+            "title":"Strengthen Core Subjects",
+            "description":"Focus on: "+", ".join(required)+"."
+        })
+
+    if skills:
+        roadmap.append({
+            "step":len(roadmap)+1,
+            "title":"Develop Career Skills",
+            "description":"Build practical skills in: "+", ".join(skills)+"."
+        })
+
+    roadmap.append({
+        "step":len(roadmap)+1,
+        "title":"Build Practical Experience",
+        "description":"Create projects, complete practical assignments, participate in internships and build a portfolio related to this career."
+    })
+
+    if interests:
+        roadmap.append({
+            "step":len(roadmap)+1,
+            "title":"Explore Your Career Interests",
+            "description":"Explore areas such as "+", ".join(interests)+"."
+        })
+
+    roadmap.append({
+        "step":len(roadmap)+1,
+        "title":"Prepare for Employment",
+        "description":"Prepare your resume, portfolio, interviews and relevant technical or professional certifications."
+    })
+
+    if growth:
+        roadmap.append({
+            "step":len(roadmap)+1,
+            "title":"Plan Long-Term Growth",
+            "description":growth
+        })
+
+    return roadmap
+    
 @app.route("/generate-result")
 def generate_result():
     if "user_id" not in session:
         return redirect("/login")
-    
-    user_id = session["user_id"]
-    db = get_db_connection()
-    cursor = db.cursor(dictionary=True)
-    
-    # Get psychometric data
-    cursor.execute("SELECT * FROM psychometric_data WHERE user_id=%s ORDER BY test_date DESC LIMIT 1", (user_id,))
-    psychometric = cursor.fetchone()
-    
-    # Get career test data
-    cursor.execute("SELECT * FROM career_test_data WHERE user_id=%s ORDER BY test_date DESC LIMIT 1", (user_id,))
-    career_test = cursor.fetchone()
-    
-    if not psychometric or not career_test:
+
+    db=get_db_connection()
+    if not db:
+        return "Database connection error"
+
+    cursor=db.cursor(dictionary=True)
+
+    try:
+        user_id=session["user_id"]
+
+        cursor.execute(
+            "SELECT * FROM psychometric_data WHERE user_id=%s ORDER BY test_date DESC LIMIT 1",
+            (user_id,)
+        )
+        psychometric=cursor.fetchone()
+
+        cursor.execute(
+            "SELECT * FROM career_test_data WHERE user_id=%s ORDER BY test_date DESC LIMIT 1",
+            (user_id,)
+        )
+        career_test=cursor.fetchone()
+
+        if not psychometric or not career_test:
+            return redirect("/dashboard")
+
+        try:
+            answers=json.loads(career_test.get("career_answers","{}"))
+        except:
+            answers={}
+
+        careers=load_careers()
+        career_matches=[]
+
+        for career in careers:
+            if not isinstance(career,dict) or not career.get("name"):
+                continue
+
+            scores=calculate_career_match(
+                career,
+                psychometric,
+                answers
+            )
+
+            career_matches.append({
+                "career":career,
+                "scores":scores
+            })
+
+        if len(career_matches)<3:
+            return "Career prediction requires at least 3 valid career records."
+
+        career_matches.sort(
+            key=lambda x:x["scores"]["total_score"],
+            reverse=True
+        )
+
+        top_3=career_matches[:3]
+        roadmap=generate_career_roadmap(top_3[0]["career"])
+
+        cursor.execute(
+            "DELETE FROM career_results WHERE user_id=%s",
+            (user_id,)
+        )
+
+        cursor.execute("""
+            INSERT INTO career_results
+            (
+                user_id,
+                primary_career,
+                primary_confidence,
+                primary_score,
+                secondary_career,
+                secondary_confidence,
+                secondary_score,
+                alternative_career,
+                alternative_confidence,
+                alternative_score,
+                academic_score,
+                psychometric_score,
+                interest_score
+            )
+            VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        """,(
+            user_id,
+            top_3[0]["career"]["name"],
+            top_3[0]["scores"]["confidence"],
+            top_3[0]["scores"]["total_score"],
+            top_3[1]["career"]["name"],
+            top_3[1]["scores"]["confidence"],
+            top_3[1]["scores"]["total_score"],
+            top_3[2]["career"]["name"],
+            top_3[2]["scores"]["confidence"],
+            top_3[2]["scores"]["total_score"],
+            top_3[0]["scores"]["academic_score"],
+            top_3[0]["scores"]["psychometric_score"],
+            top_3[0]["scores"]["interest_score"]
+        ))
+        
+        db.commit()
+        return redirect("/result")
+
+    except Exception as e:
+        db.rollback()
+        print("Career Prediction Error:",e)
+        return f"Career Prediction Error: {e}"
+
+    finally:
         cursor.close()
         db.close()
-        return redirect("/dashboard")
-    
-    # Load careers and calculate matches
-    careers = load_careers()
-    career_matches = []
-    
-    for career in careers:
-        match_data = calculate_career_match(
-            career, 
-            psychometric, 
-            career_test,
-            career_test['top_subjects']
-        )
-        
-        career_matches.append({
-            'career': career,
-            'scores': match_data
-        })
-    
-    # Sort by total score
-    career_matches.sort(key=lambda x: x['scores']['total_score'], reverse=True)
-    
-    # Get top 3
-    top_3 = career_matches[:3]
-    
-    # Save to database
-    cursor.execute("DELETE FROM career_results WHERE user_id=%s", (user_id,))
-    
-    cursor.execute("""
-        INSERT INTO career_results
-        (user_id, primary_career, primary_confidence, primary_score,
-         secondary_career, secondary_confidence, secondary_score,
-         alternative_career, alternative_confidence, alternative_score,
-         academic_score, psychometric_score, interest_score)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-    """, (
-        user_id,
-        top_3[0]['career']['name'], top_3[0]['scores']['confidence'], top_3[0]['scores']['total_score'],
-        top_3[1]['career']['name'], top_3[1]['scores']['confidence'], top_3[1]['scores']['total_score'],
-        top_3[2]['career']['name'], top_3[2]['scores']['confidence'], top_3[2]['scores']['total_score'],
-        top_3[0]['scores']['academic_score'],
-        top_3[0]['scores']['psychometric_score'],
-        top_3[0]['scores']['interest_score']
-    ))
-    
-    db.commit()
-    cursor.close()
-    db.close()
-    
-    return redirect("/result")
 
 # ================= RESULT PAGE =================
 @app.route("/result")
 def result():
     if "user_id" not in session:
         return redirect("/login")
-    
-    user_id = session["user_id"]
-    db = get_db_connection()
-    cursor = db.cursor(dictionary=True)
-    
-    cursor.execute("SELECT * FROM career_results WHERE user_id=%s ORDER BY result_date DESC LIMIT 1", (user_id,))
-    result_data = cursor.fetchone()
-    
-    cursor.close()
-    db.close()
-    
-    if not result_data:
-        return redirect("/dashboard")
-    
-    # Load career details
-    careers = load_careers()
-    career_details = {}
-    
-    for career in careers:
-        if career['name'] == result_data['primary_career']:
-            career_details['primary'] = career
-        if career['name'] == result_data['secondary_career']:
-            career_details['secondary'] = career
-        if career['name'] == result_data['alternative_career']:
-            career_details['alternative'] = career
-    
-    return render_template("result.html", result=result_data, careers=career_details)
+
+    db=get_db_connection()
+    if not db:
+        return "Database connection error"
+
+    cursor=db.cursor(dictionary=True)
+
+    try:
+        user_id=session["user_id"]
+
+        cursor.execute(
+            "SELECT * FROM career_results WHERE user_id=%s ORDER BY result_date DESC LIMIT 1",
+            (user_id,)
+        )
+        result_data=cursor.fetchone()
+
+        if not result_data:
+            return redirect("/dashboard")
+
+        careers=load_careers()
+        career_details={}
+
+        for career in careers:
+            if not isinstance(career,dict):
+                continue
+
+            name=career.get("name","")
+
+            if name==result_data.get("primary_career"):
+                career_details["primary"]=career
+            elif name==result_data.get("secondary_career"):
+                career_details["secondary"]=career
+            elif name==result_data.get("alternative_career"):
+                career_details["alternative"]=career
+
+        primary=career_details.get("primary",{})
+        roadmap=generate_career_roadmap(primary)
+
+        profile_analysis={
+            "psychometric":round(float(result_data.get("psychometric_score") or 0),2),
+            "academic":round(float(result_data.get("academic_score") or 0),2),
+            "interests":round(float(result_data.get("interest_score") or 0),2)
+        }
+
+        return render_template(
+            "result.html",
+            result=result_data,
+            careers=career_details,
+            roadmap=roadmap,
+            profile_analysis=profile_analysis
+        )
+
+    except Exception as e:
+        print("Result Page Error:",e)
+        return f"Result Page Error: {e}"
+
+    finally:
+        cursor.close()
+        db.close()
 
 # ================= AI CHATBOT =================
 @app.route("/chatbot")

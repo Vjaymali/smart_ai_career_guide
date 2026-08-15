@@ -130,6 +130,75 @@ alt="Illustration of a person confidently standing with career-related symbols i
 
 </section>
 
+<!-- ================= AI RECOMMENDATION ================= -->
+<section class="recommendation-section">
+    {% if psych_completed and career_completed and result %}
+    <div class="recommendation-card result-ready-card">
+        <div class="recommendation-left">
+            <span class="recommend-tag">
+                <i class="fa-solid fa-sparkles"></i> AI ANALYSIS COMPLETE
+            </span>
+            <h2>Your Career Path Is Ready! 🎯</h2>
+            <p>
+                We've analyzed your personality, academic background, interests,
+                skills and career preferences. Your personalized career
+                recommendations are ready to explore.
+            </p>
+            <a href="/result" class="recommend-btn">
+                <i class="fa-solid fa-compass"></i>
+                View My Career Path
+            </a>
+        </div>
+        <div class="recommendation-right">
+            <i class="fa-solid fa-wand-magic-sparkles ai-big-icon"></i>
+        </div>
+    </div>
+    {% elif psych_completed and not career_completed %}
+    <div class="recommendation-card">
+        <div class="recommendation-left">
+            <span class="recommend-tag">
+                Career Assessment
+            </span>
+            <h2>One More Step to Unlock Your Career 🎓</h2>
+            <p>
+                Your personality assessment is complete. Now complete your
+                Career Assessment so our AI can combine your personality,
+                academics, interests and skills.
+            </p>
+            <a href="/career-test" class="recommend-btn">
+                <i class="fa-solid fa-arrow-right"></i>
+                Continue Career Assessment
+            </a>
+        </div>
+        <div class="recommendation-right">
+            <i class="fa-solid fa-graduation-cap ai-big-icon"></i>
+        </div>
+    </div>
+    {% else %}
+    <div class="recommendation-card">
+        <div class="recommendation-left">
+            <span class="recommend-tag">
+                AI Recommendation
+            </span>
+            <h2>Discover Your Career Direction 🚀</h2>
+            <p>
+                Start with our Psychometric Assessment. Your personality
+                profile will then guide you toward the Career Assessment
+                and personalized AI career recommendations.
+            </p>
+            <a href="/psychometric-test" class="recommend-btn">
+                <i class="fa-solid fa-brain"></i>
+                Start Psychometric Assessment
+            </a>
+        </div>
+        <div class="recommendation-right">
+            <i class="fa-solid fa-robot ai-big-icon"></i>
+        </div>
+    </div>
+    {% endif %}
+</section>
+
+
 <!-- ================= PROGRESS ================= -->
 
 <section class="progress-section">
@@ -198,60 +267,6 @@ Final Report
 </div>
 
 </div>
-
-</div>
-
-</section>
-
-<!-- ================= QUICK STATS ================= -->
-
-<section class="dashboard-stats">
-
-<div class="dashboard-stat-card">
-
-<div class="stat-icon">
-<i class="fa-solid fa-brain"></i>
-</div>
-
-<h2>25</h2>
-
-<p>Psychometric Questions</p>
-
-</div>
-
-<div class="dashboard-stat-card">
-
-<div class="stat-icon">
-<i class="fa-solid fa-book-open"></i>
-</div>
-
-<h2>30+</h2>
-
-<p>Career Domains</p>
-
-</div>
-
-<div class="dashboard-stat-card">
-
-<div class="stat-icon">
-<i class="fa-solid fa-chart-line"></i>
-</div>
-
-<h2>95%</h2>
-
-<p>Prediction Accuracy</p>
-
-</div>
-
-<div class="dashboard-stat-card">
-
-<div class="stat-icon">
-<i class="fa-solid fa-headset"></i>
-</div>
-
-<h2>24/7</h2>
-
-<p>AI Assistance</p>
 
 </div>
 
@@ -419,6 +434,62 @@ Book Session
 
 </section>
 
+
+<!-- ================= QUICK STATS ================= -->
+
+<section class="dashboard-stats">
+
+<div class="dashboard-stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-brain"></i>
+</div>
+
+<h2>25</h2>
+
+<p>Psychometric Questions</p>
+
+</div>
+
+<div class="dashboard-stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-book-open"></i>
+</div>
+
+<h2>30+</h2>
+
+<p>Career Domains</p>
+
+</div>
+
+<div class="dashboard-stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-chart-line"></i>
+</div>
+
+<h2>95%</h2>
+
+<p>Prediction Accuracy</p>
+
+</div>
+
+<div class="dashboard-stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-headset"></i>
+</div>
+
+<h2>24/7</h2>
+
+<p>AI Assistance</p>
+
+</div>
+
+</section>
+
+
 <!-- ================= RECENT ACTIVITY ================= -->
 
 <section class="activity-section">
@@ -486,49 +557,6 @@ Book Session
 
 </section>
 
-<!-- ================= AI RECOMMENDATION ================= -->
-
-<section class="recommendation-section">
-
-    <div class="recommendation-card">
-
-        <div class="recommendation-left">
-
-            <span class="recommend-tag">
-                AI Recommendation
-            </span>
-
-            <h2>
-                Your Next Step
-            </h2>
-
-            <p>
-
-                Complete the <strong>Psychometric Assessment</strong> first.
-                Our AI will analyze your personality traits before combining
-                them with your Career Assessment to generate highly
-                personalized career recommendations.
-
-            </p>
-
-            <a href="/psychometric-test"
-               class="recommend-btn">
-
-                Start Psychometric Test
-
-            </a>
-
-        </div>
-
-        <div class="recommendation-right">
-
-            <i class="fa-solid fa-robot ai-big-icon"></i>
-
-        </div>
-
-    </div>
-
-</section>
 
 <!-- ================= AI TIPS ================= -->
 
@@ -725,7 +753,46 @@ Book Session
     </div>
 
 </footer>
+    <script>
+document.addEventListener("DOMContentLoaded", function(){
+    const psychCompleted = {{ psych_completed|tojson }};
+    const careerCompleted = {{ career_completed|tojson }};
+    const predictionReady = psychCompleted && careerCompleted;
 
+    function updateJourney(title,completed){
+        const elements=[...document.querySelectorAll("h3,h4,h5,p,span,strong,div")];
+        const titleElement=elements.find(el=>el.textContent.trim()===title);
+        if(!titleElement)return;
+
+        let card=titleElement;
+        for(let i=0;i<6&&card;i++,card=card.parentElement){
+            if(card.querySelector("i.fa-clock, i.fa-lock, .fa-clock, .fa-lock"))break;
+        }
+        if(!card)return;
+
+        const icon=card.querySelector("i.fa-clock, i.fa-lock, .fa-clock, .fa-lock");
+        if(icon){
+            icon.classList.remove("fa-clock","fa-lock");
+            icon.classList.add(completed?"fa-check":"fa-clock");
+        }
+
+        card.querySelectorAll("p,span").forEach(el=>{
+            if(el.textContent.trim()==="Pending"||el.textContent.trim()==="Locked"){
+                el.textContent=completed?"Completed":"Pending";
+            }
+        });
+
+        if(completed){
+            card.classList.add("completed");
+            card.classList.remove("pending","locked");
+        }
+    }
+
+    updateJourney("Psychometric Test",psychCompleted);
+    updateJourney("Career Test",careerCompleted);
+    updateJourney("AI Prediction",predictionReady);
+});
+</script>
 </body>
 
 </html>

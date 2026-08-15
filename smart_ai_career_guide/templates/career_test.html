@@ -17,6 +17,18 @@
 </head>
 
 <body>
+    {% if assessment_completed %}
+<div class="assessment-overlay" id="completedPopup">
+    <div class="assessment-card">
+        <div class="assessment-icon">
+            <i class="fas fa-circle-check"></i>
+        </div>
+        <h2>Assessment Completed</h2>
+        <p>You have already completed your Career Assessment. You can view your career recommendations from the dashboard.</p>
+        <button type="button" onclick="goToDashboard()">OK</button>
+    </div>
+</div>
+{% endif %}
 
 <div class="career-wrapper">
 
@@ -147,6 +159,12 @@
     </p>
 
 </div>
+
+    <script>
+    function goToDashboard(){
+     window.location.href="/dashboard";
+    }
+</script>
 
 <script src="{{ url_for('static', filename='js/career_test.js') }}"></script>
 

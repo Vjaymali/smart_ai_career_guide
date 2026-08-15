@@ -1,29 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Career Result</title>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    </head>
-    <body>
-        <h2>Your Career Result 🎉</h2>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Career Results | Smart AI Career Guide</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/result.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        .progress-fill{width:var(--progress-width,0%)}
+    </style>
+</head>
+<body>
+<div class="result-wrapper">
+    <header class="result-header">
+        <div class="result-badge">
+            <i class="fas fa-robot"></i> AI Career Analysis
+        </div>
+        <h1>Your Career Recommendations 🚀</h1>
+        <p>Our AI analyzed your academic profile, interests, skills and psychometric assessment to identify your strongest career paths.</p>
+    </header>
 
-        <h3>{{ result }}</h3>
+    <section class="top-recommendation">
+        <div class="top-label">
+            <i class="fas fa-crown"></i> BEST CAREER MATCH
+        </div>
+        <div class="top-content">
+            <div class="top-icon"><i class="fas fa-star"></i></div>
+            <div class="top-info">
+                <h2>{{ careers.primary.name }}</h2>
+                <p>{{ careers.primary.description }}</p>
+            </div>
+            <div class="top-score">
+                <strong>{{ result.primary_confidence|default(0)|round(0) }}%</strong>
+                <span>Match</span>
+            </div>
+        </div>
+    </section>
 
-        <canvas id="chart"></canvas>
+    <section class="recommendation-section">
+        <h2><i class="fas fa-route"></i> Your Top Career Paths</h2>
+        <div class="career-grid">
+            <div class="career-card first">
+                <div class="card-rank">01</div>
+                <div class="card-icon"><i class="fas fa-star"></i></div>
+                <h3>{{ careers.primary.name }}</h3>
+                <div class="match-score">{{ result.primary_confidence|default(0)|round(0) }}%</div>
+                <span class="match-label">Career Match</span>
+                <p>{{ careers.primary.description }}</p>
+            </div>
 
-        <script>
-    new Chart(document.getElementById("chart"), {
-        type: 'bar',
-        data: {
-            labels: ['Tech', 'Business', 'Creative'],
-            datasets: [{
-                label: 'Career Fit %',
-                data: [80, 60, 40]
-            }]
-        }
-    });
-    </script>
-    </body>
+            <div class="career-card">
+                <div class="card-rank">02</div>
+                <div class="card-icon"><i class="fas fa-bullseye"></i></div>
+                <h3>{{ careers.secondary.name }}</h3>
+                <div class="match-score">{{ result.secondary_confidence|default(0)|round(0) }}%</div>
+                <span class="match-label">Career Match</span>
+                <p>{{ careers.secondary.description }}</p>
+            </div>
+
+            <div class="career-card">
+                <div class="card-rank">03</div>
+                <div class="card-icon"><i class="fas fa-lightbulb"></i></div>
+                <h3>{{ careers.alternative.name }}</h3>
+                <div class="match-score">{{ result.alternative_confidence|default(0)|round(0) }}%</div>
+                <span class="match-label">Career Match</span>
+                <p>{{ careers.alternative.description }}</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="career-roadmap">
+        <div class="roadmap-header">
+            <span class="roadmap-tag">YOUR SUCCESS PLAN</span>
+            <h2>Your Career Roadmap 🚀</h2>
+            <p>A personalized step-by-step plan to help you move toward your recommended career.</p>
+        </div>
+        <div class="roadmap-list">
+            {% for item in roadmap %}
+            <div class="roadmap-item">
+                <div class="roadmap-number">{{ item.step }}</div>
+                <div class="roadmap-content">
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+
+    <section class="analysis-section">
+        <h2><i class="fas fa-chart-bar"></i> Profile Analysis</h2>
+        <div class="analysis-grid">
+            <div class="analysis-card">
+                <div class="analysis-top">
+                    <span><i class="fas fa-graduation-cap"></i> Academic Match</span>
+                    <strong>{{ profile_analysis.academic|default(0)|round(0) }}%</strong>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" style="--progress-width:{{ profile_analysis.academic|default(0) }}%"></div>
+                </div>
+            </div>
+
+            <div class="analysis-card">
+                <div class="analysis-top">
+                    <span><i class="fas fa-brain"></i> Psychometric Match</span>
+                    <strong>{{ profile_analysis.psychometric|default(0)|round(0) }}%</strong>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" style="--progress-width:{{ profile_analysis.psychometric|default(0) }}%"></div>
+                </div>
+            </div>
+
+            <div class="analysis-card">
+                <div class="analysis-top">
+                    <span><i class="fas fa-heart"></i> Interest &amp; Skills</span>
+                    <strong>{{ profile_analysis.interests|default(0)|round(0) }}%</strong>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" style="--progress-width:{{ profile_analysis.interests|default(0) }}%"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="insight-box">
+        <div class="insight-icon">
+            <i class="fas fa-wand-magic-sparkles"></i>
+        </div>
+        <div>
+            <h3>AI Career Insight</h3>
+            <p>Your recommendations are generated by combining your psychometric profile with your academic background, interests, strengths and career preferences.</p>
+        </div>
+    </section>
+
+    <div class="result-actions">
+        <a href="/dashboard" class="secondary-btn">
+            <i class="fas fa-house"></i> Dashboard
+        </a>
+        <button type="button" onclick="window.print()" class="primary-btn">
+            <i class="fas fa-file-pdf"></i> Save / Print Report
+        </button>
+    </div>
+</div>
+</body>
 </html>

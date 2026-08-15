@@ -70,7 +70,7 @@ Swal.fire({
 
 }).then(() => {
 
-    window.location.href = "/dashboard";
+    window.location.href="/career-test";
 
 });
 
