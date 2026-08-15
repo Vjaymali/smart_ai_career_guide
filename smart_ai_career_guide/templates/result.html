@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='css/result.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        .progress-fill{width:var(--progress-width,0%)}
+        .progress-fill { width: var(--progress-width, 0%); }
+        [style*="width"] .progress-fill { width: inherit; }
     </style>
 </head>
 <body>
@@ -98,7 +99,7 @@
                     <strong>{{ profile_analysis.academic|default(0)|round(0) }}%</strong>
                 </div>
                 <div class="progress-track">
-                    <div class="progress-fill" style="--progress-width:{{ profile_analysis.academic|default(0) }}%"></div>
+                    <div class="progress-fill" style="--progress-width: {{ profile_analysis.academic|default(0) }}%"></div>
                 </div>
             </div>
 
@@ -108,7 +109,7 @@
                     <strong>{{ profile_analysis.psychometric|default(0)|round(0) }}%</strong>
                 </div>
                 <div class="progress-track">
-                    <div class="progress-fill" style="--progress-width:{{ profile_analysis.psychometric|default(0) }}%"></div>
+                    <div class="progress-fill" style="--progress-width: {{ profile_analysis.psychometric|default(0) }}%"></div>
                 </div>
             </div>
 
@@ -118,7 +119,7 @@
                     <strong>{{ profile_analysis.interests|default(0)|round(0) }}%</strong>
                 </div>
                 <div class="progress-track">
-                    <div class="progress-fill" style="--progress-width:{{ profile_analysis.interests|default(0) }}%"></div>
+                    <div class="progress-fill" style="--progress-width: {{ profile_analysis.interests|default(0) }}%"></div>
                 </div>
             </div>
         </div>

@@ -4,31 +4,31 @@ PSYCHOMETRIC TEST
 
 const questions = [
 
-{ q: "I enjoy solving logical problems.", type: "technical" },
-{ q: "I like designing or creating new things.", type: "creative" },
-{ q: "I enjoy helping people solve their problems.", type: "social" },
-{ q: "I like taking leadership and managing tasks.", type: "business" },
-{ q: "I am interested in coding or technology.", type: "technical" },
-{ q: "I enjoy drawing, writing, or content creation.", type: "creative" },
-{ q: "I communicate well with others.", type: "social" },
-{ q: "I like business ideas and startups.", type: "business" },
-{ q: "I enjoy mathematics and analysis.", type: "technical" },
-{ q: "I think creatively to solve problems.", type: "creative" },
-{ q: "I like teamwork and collaboration.", type: "social" },
-{ q: "I take initiative in projects.", type: "business" },
-{ q: "I enjoy working with computers.", type: "technical" },
-{ q: "I like visual storytelling.", type: "creative" },
-{ q: "I understand others' emotions easily.", type: "social" },
-{ q: "I like planning and organizing.", type: "business" },
-{ q: "I enjoy learning new technologies.", type: "technical" },
-{ q: "I have a strong imagination.", type: "creative" },
-{ q: "I enjoy public speaking.", type: "social" },
-{ q: "I am confident taking risks.", type: "business" },
-{ q: "I like problem-solving challenges.", type: "technical" },
-{ q: "I enjoy creative thinking tasks.", type: "creative" },
-{ q: "I help others when they need support.", type: "social" },
-{ q: "I like decision making.", type: "business" },
-{ q: "I enjoy analytical thinking.", type: "technical" }
+    { q: "I enjoy solving logical problems.", type: "technical" },
+    { q: "I like designing or creating new things.", type: "creative" },
+    { q: "I enjoy helping people solve their problems.", type: "social" },
+    { q: "I like taking leadership and managing tasks.", type: "business" },
+    { q: "I am interested in coding or technology.", type: "technical" },
+    { q: "I enjoy drawing, writing, or content creation.", type: "creative" },
+    { q: "I communicate well with others.", type: "social" },
+    { q: "I like business ideas and startups.", type: "business" },
+    { q: "I enjoy mathematics and analysis.", type: "technical" },
+    { q: "I think creatively to solve problems.", type: "creative" },
+    { q: "I like teamwork and collaboration.", type: "social" },
+    { q: "I take initiative in projects.", type: "business" },
+    { q: "I enjoy working with computers.", type: "technical" },
+    { q: "I like visual storytelling.", type: "creative" },
+    { q: "I understand others' emotions easily.", type: "social" },
+    { q: "I like planning and organizing.", type: "business" },
+    { q: "I enjoy learning new technologies.", type: "technical" },
+    { q: "I have a strong imagination.", type: "creative" },
+    { q: "I enjoy public speaking.", type: "social" },
+    { q: "I am confident taking risks.", type: "business" },
+    { q: "I like problem-solving challenges.", type: "technical" },
+    { q: "I enjoy creative thinking tasks.", type: "creative" },
+    { q: "I help others when they need support.", type: "social" },
+    { q: "I like decision making.", type: "business" },
+    { q: "I enjoy analytical thinking.", type: "technical" }
 
 ];
 
@@ -40,162 +40,215 @@ let current = 0;
 
 let answers = new Array(questions.length).fill(null);
 
+let isSubmitting = false;
+
+
 /*=========================================
 LOAD QUESTION
 =========================================*/
 
 function loadQuestion() {
 
-const questionBox = document.getElementById("question-box");
+    const questionBox = document.getElementById("question-box");
+    const counter = document.getElementById("questionCounter");
+    const progress = document.getElementById("progress");
+    const progressText = document.getElementById("progressText");
+    const nextBtn = document.getElementById("nextBtn");
 
-const counter = document.getElementById("questionCounter");
+    if (!questionBox || !counter || !progress || !progressText || !nextBtn) {
+        console.error("Psychometric test elements are missing from the page.");
+        return;
+    }
 
-const progress = document.getElementById("progress");
+    /*-------------------------
+    DISPLAY CURRENT QUESTION
+    --------------------------*/
 
-const progressText = document.getElementById("progressText");
+    questionBox.innerText = questions[current].q;
 
-const nextBtn = document.getElementById("nextBtn");
+    questionBox.style.opacity = "1";
 
-questionBox.style.opacity = "0";
 
-Swal.fire({
+    /*-------------------------
+    QUESTION COUNTER
+    --------------------------*/
 
-    icon: "success",
+    counter.innerText =
+        `Question ${current + 1} of ${questions.length}`;
 
-    title: "Assessment Completed!",
 
-    text: "Your Psychometric Test has been submitted successfully.",
+    /*-------------------------
+    PROGRESS
+    --------------------------*/
 
-    confirmButtonColor: "#7c3aed"
+    const percentage =
+        ((current + 1) / questions.length) * 100;
 
-}).then(() => {
+    progress.style.width = percentage + "%";
 
-    window.location.href="/career-test";
+    progressText.innerText =
+        Math.round(percentage) + "%";
 
-});
 
-counter.innerText =
-`Question ${current+1} of ${questions.length}`;
+    /*-------------------------
+    RESET OPTIONS
+    --------------------------*/
 
-let percentage =
-((current+1)/questions.length)*100;
+    const buttons =
+        document.querySelectorAll(".options button");
 
-progress.style.width = percentage + "%";
+    buttons.forEach(btn => {
+        btn.classList.remove("selected");
+    });
 
-progressText.innerText =
-Math.round(percentage)+"%";
 
-/*-------------------------
-RESET OPTIONS
---------------------------*/
+    /*-------------------------
+    RESTORE PREVIOUS ANSWER
+    --------------------------*/
 
-let buttons =
-document.querySelectorAll(".options button");
+    if (answers[current] !== null) {
 
-buttons.forEach(btn=>{
+        const selectedButton =
+            buttons[answers[current] - 1];
 
-btn.classList.remove("selected");
+        if (selectedButton) {
+            selectedButton.classList.add("selected");
+        }
 
-});
+    }
 
-/*-------------------------
-PREVIOUS ANSWER
---------------------------*/
 
-if(answers[current]!==null){
+    /*-------------------------
+    NEXT / SUBMIT BUTTON
+    --------------------------*/
 
-buttons[answers[current]-1]
-.classList.add("selected");
+    if (current === questions.length - 1) {
+
+        nextBtn.innerHTML =
+            'Submit Assessment <i class="fas fa-paper-plane"></i>';
+
+        nextBtn.classList.add("finish-btn");
+
+    } else {
+
+        nextBtn.innerHTML =
+            'Next <i class="fas fa-arrow-right"></i>';
+
+        nextBtn.classList.remove("finish-btn");
+
+    }
+
+    /*
+     * The button should only become usable after
+     * an answer has been selected for this question.
+     */
+    nextBtn.disabled = answers[current] === null;
 
 }
 
-/*-------------------------
-NEXT BUTTON
---------------------------*/
-
-if(current===questions.length-1){
-
-nextBtn.innerHTML =
-'Submit Assessment <i class="fas fa-paper-plane"></i>';
-
-nextBtn.classList.add("finish-btn");
-
-}else{
-
-nextBtn.innerHTML =
-'Next <i class="fas fa-arrow-right"></i>';
-
-nextBtn.classList.remove("finish-btn");
-
-}
-
-}
 
 /*=========================================
 SELECT ANSWER
 =========================================*/
 
-function selectAnswer(value){
+function selectAnswer(value) {
 
-answers[current]=value;
+    if (isSubmitting) {
+        return;
+    }
 
-let buttons =
-document.querySelectorAll(".options button");
+    answers[current] = value;
 
-buttons.forEach(btn=>{
+    const buttons =
+        document.querySelectorAll(".options button");
 
-btn.classList.remove("selected");
+    buttons.forEach(btn => {
+        btn.classList.remove("selected");
+    });
 
-});
+    const selectedButton =
+        buttons[value - 1];
 
-buttons[value-1]
-.classList.add("selected");
+    if (selectedButton) {
+        selectedButton.classList.add("selected");
+    }
+
+    const nextBtn =
+        document.getElementById("nextBtn");
+
+    if (nextBtn) {
+        nextBtn.disabled = false;
+    }
 
 }
+
 
 /*=========================================
 NEXT
 =========================================*/
 
-function nextQuestion(){
+function nextQuestion() {
 
-if(answers[current]===null){
+    if (isSubmitting) {
+        return;
+    }
 
-alert("Please select an answer before continuing.");
+    /* Require an answer before moving forward. */
+    if (answers[current] === null) {
 
-return;
+        alert("Please select an answer before continuing.");
+
+        return;
+    }
+
+
+    /*
+     * NORMAL NEXT:
+     * Move to the next question only.
+     */
+    if (current < questions.length - 1) {
+
+        current++;
+
+        loadQuestion();
+
+        scrollTopSmooth();
+
+        return;
+    }
+
+
+    /*
+     * FINAL QUESTION:
+     * Submit the complete assessment only here.
+     */
+    submitTest();
 
 }
 
-if(current<questions.length-1){
-
-current++;
-
-loadQuestion();
-
-}else{
-
-submitTest();
-
-}
-
-}
 
 /*=========================================
 PREVIOUS
 =========================================*/
 
-function prevQuestion(){
+function prevQuestion() {
 
-if(current>0){
+    if (isSubmitting) {
+        return;
+    }
 
-current--;
+    if (current > 0) {
 
-loadQuestion();
+        current--;
+
+        loadQuestion();
+
+        scrollTopSmooth();
+
+    }
 
 }
 
-}
 
 /*=========================================
 SUBMIT TEST
@@ -203,15 +256,66 @@ SUBMIT TEST
 
 function submitTest() {
 
-    // Show AI Loading Screen
-    const loading = document.getElementById("loadingScreen");
+    /*
+     * Prevent duplicate final submissions.
+     */
+    if (isSubmitting) {
+        return;
+    }
+
+    /*
+     * Extra safety check:
+     * submission is only allowed on the last question.
+     */
+    if (current !== questions.length - 1) {
+        return;
+    }
+
+    /*
+     * Make sure every question has an answer
+     * before sending anything to the server.
+     */
+    const incomplete = answers.some(answer => answer === null);
+
+    if (incomplete) {
+
+        alert("Please answer all questions before submitting.");
+
+        return;
+    }
+
+    isSubmitting = true;
+
+
+    /*-------------------------
+    SHOW AI LOADING SCREEN
+    --------------------------*/
+
+    const loading =
+        document.getElementById("loadingScreen");
 
     if (loading) {
         loading.classList.add("active");
     }
 
-    // Prepare answers for database
-    let finalAnswers = [];
+
+    /*-------------------------
+    DISABLE NAVIGATION
+    --------------------------*/
+
+    const nextBtn =
+        document.getElementById("nextBtn");
+
+    if (nextBtn) {
+        nextBtn.disabled = true;
+    }
+
+
+    /*-------------------------
+    PREPARE ANSWERS
+    --------------------------*/
+
+    const finalAnswers = [];
 
     for (let i = 0; i < questions.length; i++) {
 
@@ -228,6 +332,11 @@ function submitTest() {
         });
 
     }
+
+
+    /*-------------------------
+    SAVE TO DATABASE
+    --------------------------*/
 
     fetch("/submit-psychometric", {
 
@@ -259,11 +368,34 @@ function submitTest() {
 
         console.log("Psychometric Saved:", data);
 
-        setTimeout(() => {
+        /*
+         * Database save succeeded.
+         *
+         * Only now show the existing
+         * Assessment Completed popup.
+         */
+        if (loading) {
+            loading.classList.remove("active");
+        }
 
+        Swal.fire({
+
+            icon: "success",
+
+            title: "Assessment Completed!",
+
+            text: "Your Psychometric Test has been submitted successfully.",
+
+            confirmButtonColor: "#7c3aed"
+
+        }).then(() => {
+
+            /*
+             * Redirect ONLY after the user clicks OK.
+             */
             window.location.href = "/career-test";
 
-        }, 2500);
+        });
 
     })
 
@@ -271,8 +403,14 @@ function submitTest() {
 
         console.error(error);
 
+        isSubmitting = false;
+
         if (loading) {
             loading.classList.remove("active");
+        }
+
+        if (nextBtn) {
+            nextBtn.disabled = false;
         }
 
         alert("Something went wrong while saving your responses.");
@@ -281,13 +419,14 @@ function submitTest() {
 
 }
 
+
 /*=========================================
 PREVENT ENTER KEY SUBMIT
 =========================================*/
 
-document.addEventListener("keydown", function(e){
+document.addEventListener("keydown", function(e) {
 
-    if(e.key==="Enter"){
+    if (e.key === "Enter") {
 
         e.preventDefault();
 
@@ -295,136 +434,97 @@ document.addEventListener("keydown", function(e){
 
 });
 
+
 /*=========================================
 PAGE LOAD
 =========================================*/
 
-window.onload=function(){
+window.onload = function() {
 
     loadQuestion();
 
 };
 
+
 /*=========================================
 OPTION ANIMATION
 =========================================*/
 
-document.querySelectorAll(".options button").forEach(button=>{
+document.querySelectorAll(".options button").forEach(button => {
 
-button.addEventListener("click",function(){
+    button.addEventListener("click", function() {
 
-this.animate([
+        this.animate(
 
-{
+            [
 
-transform:"scale(.95)"
+                {
+                    transform: "scale(.95)"
+                },
 
-},
+                {
+                    transform: "scale(1.03)"
+                },
 
-{
+                {
+                    transform: "scale(1)"
+                }
 
-transform:"scale(1.03)"
+            ],
 
-},
+            {
+                duration: 250
+            }
 
-{
+        );
 
-transform:"scale(1)"
-
-}
-
-],{
-
-duration:250
-
-});
-
-});
+    });
 
 });
+
 
 /*=========================================
 SMOOTH QUESTION TRANSITION
 =========================================*/
 
-function animateQuestion(){
+function animateQuestion() {
 
-const card=document.querySelector(".question-card");
+    const card =
+        document.querySelector(".question-card");
 
-card.style.opacity="0";
+    if (!card) {
+        return;
+    }
 
-card.style.transform="translateY(20px)";
+    card.style.opacity = "0";
 
-setTimeout(()=>{
+    card.style.transform =
+        "translateY(20px)";
 
-card.style.opacity="1";
+    setTimeout(() => {
 
-card.style.transform="translateY(0px)";
+        card.style.opacity = "1";
 
-},180);
+        card.style.transform =
+            "translateY(0px)";
+
+    }, 180);
 
 }
 
-/*=========================================
-OVERRIDE LOAD
-=========================================*/
-
-const oldLoadQuestion=loadQuestion;
-
-loadQuestion=function(){
-
-animateQuestion();
-
-oldLoadQuestion();
-
-};
-
-/*=========================================
-DISABLE NEXT UNTIL OPTION SELECTED
-=========================================*/
-
-const originalSelect=selectAnswer;
-
-selectAnswer=function(value){
-
-originalSelect(value);
-
-document.getElementById("nextBtn").disabled=false;
-
-};
 
 /*=========================================
 AUTO SCROLL
 =========================================*/
 
-function scrollTopSmooth(){
+function scrollTopSmooth() {
 
-window.scrollTo({
+    window.scrollTo({
 
-top:0,
+        top: 0,
 
-behavior:"smooth"
+        behavior: "smooth"
 
-});
+    });
 
 }
-
-const oldNext=nextQuestion;
-
-nextQuestion=function(){
-
-oldNext();
-
-scrollTopSmooth();
-
-};
-
-const oldPrev=prevQuestion;
-
-prevQuestion=function(){
-
-oldPrev();
-
-scrollTopSmooth();
-
-};

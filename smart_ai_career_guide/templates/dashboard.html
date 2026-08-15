@@ -754,45 +754,45 @@ Book Session
 
 </footer>
     <script>
-document.addEventListener("DOMContentLoaded", function(){
-    const psychCompleted = {{ psych_completed|tojson }};
-    const careerCompleted = {{ career_completed|tojson }};
-    const predictionReady = psychCompleted && careerCompleted;
+        document.addEventListener("DOMContentLoaded", function(){
+            const psychCompleted = {{ psych_completed|tojson }};
+            const careerCompleted = {{ career_completed|tojson }};
+            const predictionReady = psychCompleted && careerCompleted;
 
-    function updateJourney(title,completed){
-        const elements=[...document.querySelectorAll("h3,h4,h5,p,span,strong,div")];
-        const titleElement=elements.find(el=>el.textContent.trim()===title);
-        if(!titleElement)return;
+            function updateJourney(title,completed){
+                const elements=[...document.querySelectorAll("h3,h4,h5,p,span,strong,div")];
+                const titleElement=elements.find(el=>el.textContent.trim()===title);
+                if(!titleElement)return;
 
-        let card=titleElement;
-        for(let i=0;i<6&&card;i++,card=card.parentElement){
-            if(card.querySelector("i.fa-clock, i.fa-lock, .fa-clock, .fa-lock"))break;
-        }
-        if(!card)return;
+                let card=titleElement;
+                for(let i=0;i<6&&card;i++,card=card.parentElement){
+                    if(card.querySelector("i.fa-clock, i.fa-lock, .fa-clock, .fa-lock"))break;
+                }
+                if(!card)return;
 
-        const icon=card.querySelector("i.fa-clock, i.fa-lock, .fa-clock, .fa-lock");
-        if(icon){
-            icon.classList.remove("fa-clock","fa-lock");
-            icon.classList.add(completed?"fa-check":"fa-clock");
-        }
+                const icon=card.querySelector("i.fa-clock, i.fa-lock, .fa-clock, .fa-lock");
+                if(icon){
+                    icon.classList.remove("fa-clock","fa-lock");
+                    icon.classList.add(completed?"fa-check":"fa-clock");
+                }
 
-        card.querySelectorAll("p,span").forEach(el=>{
-            if(el.textContent.trim()==="Pending"||el.textContent.trim()==="Locked"){
-                el.textContent=completed?"Completed":"Pending";
+                card.querySelectorAll("p,span").forEach(el=>{
+                    if(el.textContent.trim()==="Pending"||el.textContent.trim()==="Locked"){
+                        el.textContent=completed?"Completed":"Pending";
+                    }
+                });
+
+                if(completed){
+                    card.classList.add("completed");
+                    card.classList.remove("pending","locked");
+                }
             }
+
+            updateJourney("Psychometric Test",psychCompleted);
+            updateJourney("Career Test",careerCompleted);
+            updateJourney("AI Prediction",predictionReady);
         });
-
-        if(completed){
-            card.classList.add("completed");
-            card.classList.remove("pending","locked");
-        }
-    }
-
-    updateJourney("Psychometric Test",psychCompleted);
-    updateJourney("Career Test",careerCompleted);
-    updateJourney("AI Prediction",predictionReady);
-});
-</script>
+    </script>
 </body>
 
 </html>
