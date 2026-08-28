@@ -303,7 +303,7 @@ async function submitCareerTest(){
             headers:{
                 "Content-Type":"application/json"
             },
-            body:JSON.stringify(answers)
+            body:JSON.stringify({answers:answers})
         });
         const data=await response.json();
         if(data.success){

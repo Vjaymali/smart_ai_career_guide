@@ -393,8 +393,8 @@ transform:translateY(0px);
 ========================================= */
 
 .experts-section{
-    padding:100px 8%;
-    padding-top:40px;
+    padding:80px 6%;
+    padding-top:30px;
     margin-top:0;
     background:#fff;
 
@@ -484,14 +484,15 @@ transform:translateY(0px);
 ========================================= */
 
 .services-section{
-    padding:100px 8%;
+     padding:120px 10%;
+    padding-top:25px;
     background:#f8f9ff;
 }
 
 .services-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:30px;
+    gap:20px;
 }
 
 .service-card{

@@ -308,30 +308,57 @@ def dashboard():
 def psychometric_test():
     if "user_id" not in session:
         return redirect("/login")
+
     return render_template("psychometric_test.html")
 
-# ================= SUBMIT PSYCHOMETRIC =================
+
 @app.route("/submit-psychometric", methods=["POST"])
 def submit_psychometric():
 
     if "user_id" not in session:
-        return jsonify({"success": False, "message": "Not logged in"}), 401
+        return jsonify({
+            "success": False,
+            "message": "Not logged in"
+        }), 401
+
+    db = None
+    cursor = None
 
     try:
-
         data = request.get_json()
 
+        if not data:
+            return jsonify({
+                "success": False,
+                "message": "No data received"
+            }), 400
+
         answers = data.get("answers", [])
+
+        if not isinstance(answers, list) or len(answers) == 0:
+            return jsonify({
+                "success": False,
+                "message": "No psychometric answers received"
+            }), 400
 
         technical = 0
         creative = 0
         social = 0
         business = 0
 
+        # Calculate latest attempt scores
         for ans in answers:
 
+            if not isinstance(ans, dict):
+                continue
+
             category = ans.get("category")
-            score = int(ans.get("score", 0))
+            score = ans.get("score", 0)
+
+            try:
+                score = int(score)
+            except (TypeError, ValueError):
+                score = 0
 
             if category == "technical":
                 technical += score
@@ -345,76 +372,99 @@ def submit_psychometric():
             elif category == "business":
                 business += score
 
+        user_id = session["user_id"]
+
         db = get_db_connection()
+
+        if not db:
+            return jsonify({
+                "success": False,
+                "message": "Database connection error"
+            }), 500
+
         cursor = db.cursor()
 
-        # Remove previous record
+        # REMOVE PREVIOUS ATTEMPT
         cursor.execute(
-            "DELETE FROM psychometric_data WHERE user_id=%s",
-            (session["user_id"],)
+            """
+            DELETE FROM psychometric_data
+            WHERE user_id = %s
+            """,
+            (user_id,)
         )
 
-        # Insert new scores
-        cursor.execute("""
-
-        INSERT INTO psychometric_data
-        (
-            user_id,
-            technical_score,
-            creative_score,
-            social_score,
-            business_score
+        # REMOVE OLD CAREER RESULT
+        cursor.execute(
+            """
+            DELETE FROM career_results
+            WHERE user_id = %s
+            """,
+            (user_id,)
         )
 
-        VALUES
-        (
-            %s,%s,%s,%s,%s
+        # SAVE NEW ATTEMPT
+        cursor.execute(
+            """
+            INSERT INTO psychometric_data
+            (
+                user_id,
+                technical_score,
+                creative_score,
+                social_score,
+                business_score
+            )
+            VALUES (%s, %s, %s, %s, %s)
+            """,
+            (
+                user_id,
+                technical,
+                creative,
+                social,
+                business
+            )
         )
-
-        """,
-
-        (
-            session["user_id"],
-            technical,
-            creative,
-            social,
-            business
-        ))
 
         db.commit()
 
-        cursor.close()
-        db.close()
-
         return jsonify({
-
             "success": True,
-
-            "message": "Psychometric Test Saved Successfully"
-
+            "message": "Psychometric Test Saved Successfully",
+            "scores": {
+                "technical": technical,
+                "creative": creative,
+                "social": social,
+                "business": business
+            }
         })
 
     except Exception as e:
 
-        print("Psychometric Error:", e)
+        if db:
+            db.rollback()
+
+        print("Psychometric Submission Error:", e)
 
         return jsonify({
-
             "success": False,
-
             "message": str(e)
+        }), 500
 
-        }),500
+    finally:
+
+        if cursor:
+            cursor.close()
+
+        if db:
+            db.close()
 
 # ================= CAREER TEST =================
 @app.route("/career-test")
 def career_test():
+
     if "user_id" not in session:
         return redirect("/login")
 
-    db=get_db_connection()
-    if not db:
-        return "Database connection error"
+    return render_template("career_test.html")
 
     cursor=db.cursor(dictionary=True)
 
@@ -439,76 +489,121 @@ def career_test():
         db.close()
 
 # ================= SUBMIT CAREER TEST =================
-@app.route("/submit-career-test",methods=["POST"])
+@app.route("/submit-career-test", methods=["POST"])
 def submit_career_test():
+
     if "user_id" not in session:
         return jsonify({
-            "success":False,
-            "message":"Login required"
-        }),401
+            "success": False,
+            "message": "Login required"
+        }), 401
 
-    db=get_db_connection()
-    if not db:
-        return jsonify({
-            "success":False,
-            "message":"Database connection error"
-        }),500
-
-    cursor=db.cursor(dictionary=True)
+    db = None
+    cursor = None
 
     try:
-        user_id=session["user_id"]
+        user_id = session["user_id"]
 
-        cursor.execute(
-            "SELECT id FROM career_test_data WHERE user_id=%s LIMIT 1",
-            (user_id,)
-        )
-        existing=cursor.fetchone()
-
-        if existing:
-            return jsonify({
-                "success":False,
-                "already_completed":True,
-                "message":"You have already completed the Career Test."
-            }),409
-
-        data=request.get_json()
+        data = request.get_json(silent=True)
 
         if not data:
             return jsonify({
-                "success":False,
-                "message":"No data received"
-            }),400
+                "success": False,
+                "message": "No data received"
+            }), 400
 
-        answers=data.get("answers",{})
+        answers = data.get("answers", {})
 
-        cursor.execute("""
+        if not isinstance(answers, dict):
+            return jsonify({
+                "success": False,
+                "message": "Invalid career test answers"
+            }), 400
+
+        db = get_db_connection()
+
+        if not db:
+            return jsonify({
+                "success": False,
+                "message": "Database connection error"
+            }), 500
+
+        cursor = db.cursor()
+
+
+        # DELETE PREVIOUS CAREER TEST ATTEMPT
+
+        cursor.execute(
+            """
+            DELETE FROM career_test_data
+            WHERE user_id = %s
+            """,
+            (user_id,)
+        )
+
+        # DELETE OLD CAREER RESULT
+        # Latest test data must generate a new result
+
+        cursor.execute(
+            """
+            DELETE FROM career_results
+            WHERE user_id = %s
+            """,
+            (user_id,)
+        )
+
+        # SAVE NEW CAREER TEST ATTEMPT
+
+        cursor.execute(
+            """
             INSERT INTO career_test_data
-            (user_id,career_answers)
-            VALUES(%s,%s)
-        """,(
-            user_id,
-            json.dumps(answers)
-        ))
+            (
+                user_id,
+                career_answers
+            )
+            VALUES
+            (
+                %s,
+                %s
+            )
+            """,
+            (
+                user_id,
+                json.dumps(answers)
+            )
+        )
 
         db.commit()
 
+        print(
+            f"Career Test updated successfully for user {user_id}"
+        )
+
         return jsonify({
-            "success":True,
-            "message":"Career Test Completed Successfully"
+            "success": True,
+            "message": "Career Test Completed Successfully",
+            "redirect": "/dashboard"
         })
 
     except Exception as e:
-        db.rollback()
-        print("Career Test Error:",e)
+
+        if db:
+            db.rollback()
+
+        print("Career Test Error:", e)
+
         return jsonify({
-            "success":False,
-            "message":str(e)
-        }),500
+            "success": False,
+            "message": str(e)
+        }), 500
 
     finally:
-        cursor.close()
-        db.close()
+
+        if cursor:
+            cursor.close()
+
+        if db:
+            db.close()
 
 # ================= CAREER PREDICTION ENGINE =================
 def load_careers():
@@ -585,6 +680,14 @@ def calculate_career_match(career,psychometric,answers):
     personality_fit=career.get("personality_fit",{})
     category=normalize_text(career.get("category",""))
     career_name=normalize_text(career.get("name",""))
+    if career_name == "software developer":
+        print("DEBUG USER INTERESTS:", interests)
+        print("DEBUG USER HOBBIES:", hobbies)
+        print("DEBUG USER STRENGTHS:", strengths)
+        print("DEBUG USER SUBJECTS:", favorite)
+        print("DEBUG CAREER INTERESTS:", career_interests)
+        print("DEBUG CAREER SKILLS:", career_skills)
+        print("DEBUG REQUIRED SUBJECTS:", required)
 
     required_score=subject_match(favorite,required)
     optional_score=subject_match(favorite,optional) if optional else 50
@@ -792,10 +895,12 @@ def generate_result():
             answers=json.loads(career_test.get("career_answers","{}"))
         except:
             answers={}
+        print("DEBUG RAW CAREER ANSWERS:", answers)
 
         careers=load_careers()
         career_matches=[]
 
+        # Existing recommendation engine
         for career in careers:
             if not isinstance(career,dict) or not career.get("name"):
                 continue
@@ -814,12 +919,80 @@ def generate_result():
         if len(career_matches)<3:
             return "Career prediction requires at least 3 valid career records."
 
+           # ================= ML PERSONALIZATION =================
+        from ml.feature_mapper import map_existing_data_to_ml_features
+        from ml.predictor import predict_careers
+        from ml.career_mapping import map_ml_career_to_app_career
+
+        ml_features = map_existing_data_to_ml_features(
+            psychometric,
+            answers
+        )
+
+        ml_predictions = predict_careers(ml_features)
+
+        # Keep ML predictions as an additional signal.
+        # Do NOT give unsupported careers an ML score of 0,
+        # because the trained model currently contains only 6 classes.
+        ml_scores = {}
+
+        for prediction in ml_predictions:
+            app_career = map_ml_career_to_app_career(
+                prediction["career"]
+            )
+
+            if app_career:
+                ml_scores[app_career.lower()] = prediction["probability"]
+
+        # Existing engine remains the primary recommendation system.
+        # ML provides an additional bonus only when it recognizes
+        # the career directly.
+        for match in career_matches:
+            career_name = match["career"]["name"]
+
+            existing_score = match["scores"]["total_score"]
+
+            ml_score = ml_scores.get(
+                career_name.lower(),
+                0
+            )
+
+            # ML contributes up to 10% only when applicable.
+            ml_bonus = ml_score * 0.10
+
+            match["scores"]["ml_score"] = round(
+                ml_score,
+                2
+            )
+
+            match["scores"]["total_score"] = round(
+                min(existing_score + ml_bonus, 99),
+                2
+            )
+
+            match["scores"]["confidence"] = round(
+                min(match["scores"]["total_score"], 99),
+                2
+            )
+
+        # Rank ALL careers from careers_database.json
         career_matches.sort(
-            key=lambda x:x["scores"]["total_score"],
+            key=lambda x: x["scores"]["total_score"],
             reverse=True
         )
 
-        top_3=career_matches[:3]
+        # Existing result page continues showing the best 3
+        top_3 = career_matches[:3]
+        print("CAREER RANKING DEBUG:")
+        for match in career_matches:
+            print(
+                match["career"]["name"],
+                "TOTAL:", match["scores"]["total_score"],
+                "ACADEMIC:", match["scores"].get("academic_score"),
+                "PSYCHOMETRIC:", match["scores"].get("psychometric_score"),
+                "INTEREST:", match["scores"].get("interest_score"),
+                "ML:", match["scores"].get("ml_score")
+            )
         roadmap=generate_career_roadmap(top_3[0]["career"])
 
         cursor.execute(

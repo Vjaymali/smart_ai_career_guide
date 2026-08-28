@@ -1,4 +1,5 @@
-/* ================================== SMART AI CAREER GUIDE - COMPLETE CSS ================================== */
+
+/* ===== SMART AI CAREER GUIDE - COMPLETE CSS ===== */
 
 * {
   margin: 0;
@@ -31,7 +32,7 @@ body {
 
 .logo {
   font-family: 'Poppins', sans-serif;
-  font-size: 24px;
+  font-size: px;
   font-weight: 700;
   color: white;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
@@ -47,9 +48,10 @@ body {
 }
 
 .logo-img{
-    width:45px;
-    height:45px;
-    object-fit:contain;
+    width:60px;
+    height:60px;
+    border-radius: 12px;
+    object-fit:cover;
 }
 
 .nav-links {
@@ -125,9 +127,7 @@ body {
     padding:40px 0;
     display:flex;
     align-items:center;
-
     background:#ffffff;
-
     position:relative;
     overflow:hidden;
 
@@ -138,53 +138,36 @@ body {
 .hero::before{
 
     content:"";
-
     position:absolute;
-
     width:600px;
     height:600px;
-
     left:-220px;
     top:-180px;
-
     border-radius:50%;
-
     background:rgba(124,58,237,.10);
-
     filter:blur(120px);
-
 }
 
 .hero::after{
 
     content:"";
-
     position:absolute;
-
     width:600px;
     height:600px;
-
     right:-220px;
     bottom:-200px;
-
     border-radius:50%;
-
     background:rgba(236,72,153,.12);
-
     filter:blur(120px);
-
 }
 
 .hero-container{
     width:92%;
     max-width:1500px;
     margin:auto;
-
     display:grid;
     grid-template-columns:48% 52%;
-
     align-items:center;
-
     gap:40px;
 }
 
@@ -199,25 +182,17 @@ body {
 .hero-content h1{
 
     font-size:64px;
-
     line-height:1.15;
-
     color:#1f2937;
-
     margin-bottom:25px;
-
 }
 
 .gradient-text{
 
     background:linear-gradient(135deg,#7c3aed,#ec4899);
-
     background-clip:text;
-
     -webkit-background-clip:text;
-
     -webkit-text-fill-color:transparent;
-
 }
 
 .hero-container{
@@ -234,25 +209,15 @@ body {
 .hero-btn{
 
     display:inline-block;
-
     margin-top:20px;
-
     padding:12px 28px;
-
     border-radius:50px;
-
     background:linear-gradient(135deg,#7c3aed,#ec4899);
-
     color:#fff;
-
     text-decoration:none;
-
     font-weight:700;
-
     font-size:18px;
-
     transition:.35s;
-
     box-shadow:0 18px 40px rgba(124,58,237,.30);
 
 }
@@ -260,7 +225,6 @@ body {
 .hero-btn:hover{
 
     transform:translateY(-5px);
-
 }
 
 /* IMAGE */
@@ -268,9 +232,7 @@ body {
 .hero-image-area{
 
     display:flex;
-
     justify-content:flex-end;
-
     align-items:center;
 
 }
@@ -322,9 +284,7 @@ body {
 .hero-stats{
 
     display:flex;
-
     gap:45px;
-
     margin-top:45px;
 
 }
@@ -332,25 +292,17 @@ body {
 .hero-stats .stat h3{
 
     font-size:34px;
-
     background:linear-gradient(135deg,#7c3aed,#ec4899);
-
     background-clip:text;
-
     -webkit-background-clip:text;
-
     -webkit-text-fill-color:transparent;
-
     margin-bottom:6px;
-
 }
 
 .hero-stats .stat p{
 
     font-size:15px;
-
     color:#6b7280;
-
     font-weight:600;
 
 }
@@ -386,8 +338,8 @@ body {
 
 .feature-card {
   background: white;
-  padding: 40px;
-  border-radius: 20px;
+  padding: 20px;
+  border-radius: 10px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   border: 2px solid transparent;
@@ -430,65 +382,6 @@ body {
 }
 
 /* ============================================
-   CAREER CATEGORY CARDS (THE MISSING CSS!)
-   ============================================ */
-
-.category-card {
-  background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
-  padding: 40px;
-  border-radius: 24px;
-  box-shadow: 0 12px 40px rgba(124, 58, 237, 0.3);
-  transition: all 0.4s ease;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  text-align: center;
-}
-
-/* Glass shine effect */
-.category-card::before {
-  content: \"\";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
-  transition: 0.6s;
-}
-
-.category-card:hover::before {
-  left: 100%;
-}
-
-.category-card:hover {
-  transform: translateY(-12px) scale(1.03);
-  box-shadow: 0 25px 60px rgba(124, 58, 237, 0.5);
-}
-
-.category-icon {
-  font-size: 64px;
-  margin-bottom: 20px;
-  display: inline-block;
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.2));
-}
-
-.category-card h3 {
-  font-size: 26px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 16px;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-}
-
-.category-card p {
-  font-size: 15px;
-  color: rgba(255, 255, 255, 0.95);
-  line-height: 1.6;
-  font-weight: 500;
-}
-
-/* ============================================
    HOW IT WORKS SECTION
    ============================================ */
 
@@ -499,7 +392,7 @@ body {
 }
 
 .how-it-works h2 {
-  font-size: 42px;
+  font-size: 44px;
   font-weight: 700;
   margin-bottom: 70px;
   color: #1a202c;
@@ -518,9 +411,9 @@ body {
 .career-card {
   width: 260px;
   padding: 40px 30px;
-  border-radius: 24px;
+  border-radius: 26px;
   background: linear-gradient(135deg, #7c3aed, #ec4899);
-  color: white;
+  color:white;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
   transition: all 0.4s ease;
   cursor: pointer;
@@ -573,6 +466,65 @@ body {
   color: rgba(255, 255, 255, 0.95);
   line-height: 1.7;
   font-size: 15px;
+}
+
+/* ============================================
+   CAREER CATEGORY CARDS (THE MISSING CSS!)
+   ============================================ */
+
+.category-card {
+  background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+  padding: 20px;
+  border-radius: 24px;
+  box-shadow: 0 12px 40px rgba(124, 58, 237, 0.3);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* Glass shine effect */
+.category-card::before {
+  content: \"\";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: 0.6s;
+}
+
+.category-card:hover::before {
+  left: 100%;
+}
+
+.category-card:hover {
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: 0 25px 60px rgba(124, 58, 237, 0.5);
+}
+
+.category-icon {
+  font-size: 64px;
+  margin-bottom: 5px;
+  display: inline-block;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.2));
+}
+
+.category-card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 12px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.category-card p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.6;
+  font-weight: 500;
 }
 
 /* ============================================
