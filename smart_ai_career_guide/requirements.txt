@@ -6,3 +6,4 @@ gunicorn
 google-genai
 scikit-learn
 joblib
+pandas
