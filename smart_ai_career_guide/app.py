@@ -21,7 +21,7 @@ print("Gemini Key:", os.getenv("GEMINI_API_KEY"))
 
 # ================= FLASK APP =================
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "supersecretkey-change-this")
+app.secret_key = os.getenv("SECRET_KEY")
 
 # ================= DATABASE CONNECTION =================
 def get_db_connection():
@@ -35,7 +35,7 @@ def get_db_connection():
             user=os.getenv("DB_USER"),
             password=os.getenv("DB_PASSWORD"),
             database=os.getenv("DB_NAME"),
-            port=3306
+            port=int(os.getenv("DB_PORT", 3306))
         )
 
         print("✅ Database Connected Successfully")
