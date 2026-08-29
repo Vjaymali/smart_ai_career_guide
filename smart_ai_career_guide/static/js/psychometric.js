@@ -217,7 +217,6 @@ function nextQuestion() {
         return;
     }
 
-
     /*
      * FINAL QUESTION:
      * Submit the complete assessment only here.
@@ -225,7 +224,6 @@ function nextQuestion() {
     submitTest();
 
 }
-
 
 /*=========================================
 PREVIOUS
@@ -256,25 +254,14 @@ SUBMIT TEST
 
 function submitTest() {
 
-    /*
-     * Prevent duplicate final submissions.
-     */
     if (isSubmitting) {
         return;
     }
 
-    /*
-     * Extra safety check:
-     * submission is only allowed on the last question.
-     */
     if (current !== questions.length - 1) {
         return;
     }
 
-    /*
-     * Make sure every question has an answer
-     * before sending anything to the server.
-     */
     const incomplete = answers.some(answer => answer === null);
 
     if (incomplete) {
