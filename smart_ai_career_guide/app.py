@@ -66,51 +66,75 @@ otp_storage = {}
 # ================= EMAIL FUNCTION =================
 def send_email_otp(receiver_email, otp):
     try:
-        sender_email = os.getenv("SMTP_EMAIL")
-        app_password = os.getenv("SMTP_PASSWORD")
+        import requests
 
-        print("Sender Email:", sender_email)
-        print("Password Loaded:", "YES" if app_password else "NO")
+        brevo_api_key = os.getenv("BREVO_API_KEY")
 
-        if not sender_email or not app_password:
-            print("❌ SMTP_EMAIL or SMTP_PASSWORD not found in .env")
+        print("Brevo API Key Loaded:", "YES" if brevo_api_key else "NO")
+
+        if not brevo_api_key:
+            print("❌ BREVO_API_KEY not found")
             return False
 
-        msg = MIMEText(
-            f"""Hello,
+        url = "https://api.brevo.com/v3/smtp/email"
 
-Your OTP for Smart AI Career Guide is:
+        headers = {
+            "accept": "application/json",
+            "api-key": brevo_api_key,
+            "content-type": "application/json"
+        }
 
-{otp}
+        data = {
+            "sender": {
+                "name": "Smart AI Career Guide",
+                "email": "smartaicareerguide001@gmail.com"
+            },
+            "to": [
+                {
+                    "email": receiver_email
+                }
+            ],
+            "subject": "Smart AI Career Guide - Email Verification",
+            "htmlContent": f"""
+                <html>
+                <body>
+                    <h2>Smart AI Career Guide</h2>
 
-This OTP is valid for 10 minutes.
+                    <p>Hello,</p>
 
-Thank you,
-Smart AI Career Guide Team"""
+                    <p>Your OTP for email verification is:</p>
+
+                    <h1>{otp}</h1>
+
+                    <p>This OTP is valid for 10 minutes.</p>
+
+                    <p>Thank you,<br>
+                    Smart AI Career Guide Team</p>
+                </body>
+                </html>
+            """
+        }
+
+        response = requests.post(
+            url,
+            headers=headers,
+            json=data,
+            timeout=30
         )
 
-        msg["Subject"] = "Smart AI Career Guide - Email Verification"
-        msg["From"] = sender_email
-        msg["To"] = receiver_email
+        print("Brevo Status Code:", response.status_code)
+        print("Brevo Response:", response.text)
 
-        server = smtplib.SMTP("smtp.gmail.com", 587, timeout=30)
-        server.ehlo()
-        server.starttls()
-        server.ehlo()
+        if response.status_code in [200, 201]:
+            print("✅ OTP SENT SUCCESSFULLY")
+            return True
 
-        server.login(sender_email, app_password)
-
-        server.sendmail(sender_email, receiver_email, msg.as_string())
-
-        server.quit()
-
-        print("✅ OTP SENT SUCCESSFULLY")
-        return True
+        print("❌ BREVO EMAIL FAILED")
+        return False
 
     except Exception as e:
         print("❌ EMAIL ERROR:", e)
         return False
-
 # ================= HOME =================
 @app.route("/")
 def home():
