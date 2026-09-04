@@ -9,13 +9,20 @@ import json
 import os
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 
 # ================= LOAD ENVIRONMENT VARIABLES =================
 load_dotenv()
 
 # ================= GEMINI CLIENT =================
 client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY")
+    api_key=os.getenv("GEMINI_API_KEY"),
+    http_options=types.HttpOptions(
+        timeout=30000,
+        retry_options=types.HttpRetryOptions(
+            attempts=1
+        )
+    )
 )
 print("Gemini Key:", os.getenv("GEMINI_API_KEY"))
 
@@ -1171,9 +1178,9 @@ def chat_api():
         """
 
         # Try Gemini models in order
-        models = models = [
-             "gemini-3.5-flash-lite",
-             "gemini-2.5-flash-lite"
+        models = [
+        "gemini-3.6-flash",
+        "gemini-3.5-flash-lite"
         ]
 
         ai_reply = None
