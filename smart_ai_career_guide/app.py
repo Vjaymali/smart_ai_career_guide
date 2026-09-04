@@ -1137,49 +1137,63 @@ def result():
         db.close()
 
 # ================= AI CHATBOT =================
-@app.route("/chatbot")
-def chatbot():
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-
-    return render_template("chatbot.html")
-
 @app.route('/chat_api', methods=['POST'])
 def chat_api():
     try:
-        # Get user message
         data = request.get_json()
         user_message = data.get("message")
 
         if not user_message:
             return jsonify({"error": "Message is required"}), 400
 
-        # Optional: get user session
         user_id = session.get("user_id", None)
         session_id = f"{user_id}_session" if user_id else "guest_session"
 
-        # System prompt (your AI behavior)
         system_prompt = """
         You are a helpful career guidance counselor for the Smart AI Career Guide platform.
+
         Help users with:
         - Career suggestions
         - Skills required
-        - Roadmaps
+        - Career roadmaps
         - Learning resources
+        - Career-related questions
 
-        Keep answers simple, clear, and helpful.
+        Keep answers simple, clear, practical, and helpful.
         """
 
-        # Combine prompt + user input
-        full_prompt = system_prompt + "\nUser: " + user_message
+        # Try Gemini models in order
+        models = [
+            "gemini-3.5-flash-lite",
+            "gemini-3.1-flash-lite"
+        ]
 
-        # Generate response from Gemini
-        response = client.models.generate_content(
-            model="gemini-3.5-flash-lite",
-            contents=full_prompt
-        )
+        ai_reply = None
 
-        ai_reply = response.text
+        for model_name in models:
+            try:
+                chat = client.chats.create(
+                    model=model_name,
+                    config={
+                        "system_instruction": system_prompt
+                    }
+                )
+
+                response = chat.send_message(user_message)
+
+                if response and response.text:
+                    ai_reply = response.text
+                    break
+
+            except Exception as model_error:
+                print(f"Gemini model error ({model_name}):", str(model_error))
+                continue
+
+        # If all Gemini models fail
+        if not ai_reply:
+            return jsonify({
+                "error": "AI service is temporarily unavailable. Please try again in a moment."
+            }), 503
 
         # Save chat to database
         try:
@@ -1197,6 +1211,7 @@ def chat_api():
             """, (user_id, session_id, "ai", ai_reply))
 
             db.commit()
+
             cursor.close()
             db.close()
 
