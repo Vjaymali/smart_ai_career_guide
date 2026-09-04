@@ -1171,9 +1171,9 @@ def chat_api():
         """
 
         # Try Gemini models in order
-        models = [
-            "gemini-3.5-flash-lite",
-            "gemini-3.1-flash-lite"
+        models = models = [
+             "gemini-3.5-flash-lite",
+             "gemini-2.5-flash-lite"
         ]
 
         ai_reply = None
