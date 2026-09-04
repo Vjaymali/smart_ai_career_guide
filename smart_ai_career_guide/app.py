@@ -1137,6 +1137,14 @@ def result():
         db.close()
 
 # ================= AI CHATBOT =================
+
+@app.route("/chatbot")
+def chatbot():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    return render_template("chatbot.html")
+
 @app.route('/chat_api', methods=['POST'])
 def chat_api():
     try:
